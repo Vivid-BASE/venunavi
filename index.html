@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>べにゅなび - Guideboxx</title>
+    <style>
+        :root {
+            --primary-color: #341f97;
+            /* Navy */
+            --accent-color: #ff9f43;
+            /* Orange */
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --light-gray: #f5f5f5;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: "Meiryo", "Hiragino Kaku Gothic ProN", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 80px;
+            /* Space for bottom nav */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* --- Header --- */
+        header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        /* --- Modes Container --- */
+        .mode-section {
+            display: none;
+            /* Hidden by default */
+            padding: 20px 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mode-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- Mode A: Strategy (Search) Styles --- */
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-color);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            bottom: 5px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 46px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .autocomplete-items {
+            position: absolute;
+            border: 1px solid #d4d4d4;
+            border-bottom: none;
+            border-top: none;
+            z-index: 99;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border-radius: 0 0 15px 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .autocomplete-items div {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #fff;
+            border-bottom: 1px solid #d4d4d4;
+        }
+
+        .autocomplete-items div:hover {
+            background-color: #e9e9e9;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            scrollbar-width: none;
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #555;
+            background: #eee;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab.active {
+            transform: scale(1.05);
+            color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tab Colors */
+        .tab-parking.active {
+            background: #e74c3c;
+        }
+
+        .tab-luggage.active {
+            background: #3498db;
+        }
+
+        .tab-timekill.active {
+            background: #f1c40f;
+            color: #333;
+        }
+
+        .tab-strategy.active {
+            background: #9b59b6;
+        }
+
+        .tab-performers.active {
+            background: #2ecc71;
+        }
+
+        .content-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-top: 15px;
+            box-shadow: var(--shadow);
+            border: 1px solid #eee;
+        }
+
+        /* --- Mode B: Stamp Book Styles --- */
+        .stamp-btn-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .stamp-btn {
+            background: linear-gradient(135deg, #ff9f43, #ff6b6b);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .stamp-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Japan Map Grid */
+        .japan-map-container {
+            margin: 20px auto;
+            max-width: 350px;
+            position: relative;
+        }
+
+        .japan-grid {
+            display: grid;
+            grid-template-columns: repeat(16, 1fr);
+            grid-gap: 4px;
+        }
+
+        .pref-box {
+            background: #e0e0e0;
+            color: #555;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            aspect-ratio: 1;
+            user-select: none;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .pref-box.visited {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 0 5px rgba(255, 159, 67, 0.6);
+        }
+
+        .pref-box:active {
+            transform: scale(0.9);
+        }
+
+        .history-list {
+            margin-top: 20px;
+        }
+
+        .history-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary-color);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* --- Bottom Navigation --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            text-align: center;
+            flex: 1;
+            color: #999;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .nav-item .icon {
+            display: block;
+            font-size: 1.5rem;
+            margin-bottom: 2px;
+        }
+
+        .nav-item.active {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Map Container override */
+        #mapContainer {
+            width: 100%;
+            height: 300px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: #eee;
+            margin-top: 15px;
+        }
+
+        /* Spinner */
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--accent-color);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .map-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: #f9f9f9;
+            color: #666;
+        }
+
+        /* Disclaimer */
+        .disclaimer {
+            font-size: 0.7rem;
+            color: #999;
+            text-align: center;
+            margin-top: 30px;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        /* --- Desktop Optimization (Media Queries) --- */
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .header-nav {
+            display: none;
+        }
+
+        /* Hidden on mobile */
+
+        .header-nav button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .header-nav button:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .header-nav button.active {
+            background: white;
+            color: var(--primary-color);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        @media screen and (min-width: 768px) {
+
+            /* General Layout */
+            body {
+                padding-bottom: 0;
+            }
+
+            /* No bottom nav space needed */
+
+            /* Header */
+            .header-content {
+                flex-direction: row;
+                justify-content: space-between;
+                max-width: 900px;
+                margin: 0 auto;
+                padding: 0 20px;
+            }
+
+            .header-nav {
+                display: block;
+            }
+
+            /* Hide Bottom Nav */
+            .bottom-nav {
+                display: none;
+            }
+
+            /* Content Width */
+            .mode-section {
+                max-width: 900px;
+                padding: 40px 20px;
+            }
+
+            /* History Grid for Desktop */
+            .history-list {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .history-card {
+                margin-bottom: 0;
+            }
+
+            /* Hover Effects */
+            .tab:hover {
+                background: #ddd;
+            }
+
+            .stamp-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(255, 107, 107, 0.5);
+            }
+
+            /* Adjust Japan Map Container */
+            .japan-map-container {
+                max-width: 500px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="site-title">📍 べにゅなび 💮</div>
+            <nav class="header-nav">
+                <button onclick="switchMode('strategy')" id="header-nav-strategy" class="active">会場攻略</button>
+                <button onclick="switchMode('stamp')" id="header-nav-stamp">スタンプ帳</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MODE A: Strategy -->
+    <section id="strategy-mode" class="mode-section active">
+        <div class="search-container">
+            <input type="text" id="venueInput" placeholder="会場名を入力 (例: Zepp Haneda)">
+            <button class="search-btn" id="searchBtn">🔍</button>
+            <div id="autocomplete-list" class="autocomplete-items"></div>
+        </div>
+
+        <div style="text-align:center; margin-bottom:15px; font-weight:bold; color:var(--primary-color); font-size:1.1rem;"
+            id="currentVenueDisplay">
+            会場を検索してください
+        </div>
+
+        <div class="tabs">
+            <button class="tab tab-parking active" onclick="switchTab('parking')">🚗 駐車場</button>
+            <button class="tab tab-luggage" onclick="switchTab('lockers')">🎒 荷物</button>
+            <button class="tab tab-timekill" onclick="switchTab('cafe')">☕ 暇つぶし</button>
+            <button class="tab tab-strategy" onclick="switchTab('toilet')">🔥 攻略/トイレ</button>
+            <button class="tab tab-performers" onclick="switchTab('artists')">🎸 楽器屋</button>
+        </div>
+
+        <div id="mapContainer">
+            <div class="map-placeholder">
+                <div style="font-size:3rem; margin-bottom:10px;">🗺️</div>
+                <div>地図が表示されます</div>
+            </div>
+        </div>
+
+        <div id="contentArea" class="content-card">
+            <p style="text-align:center; color:#888;">👆 上の検索ボックスから会場を探してください</p>
+        </div>
+
+        <div class="disclaimer">
+            ※本アプリの情報はGoogleマップ等の外部APIを利用しています。<br>
+            実際の状況（空き状況や閉店など）と異なる場合があります。<br>
+            正確な情報は現地の公式案内をご確認ください。
+        </div>
+    </section>
+
+    <!-- MODE B: Stamp -->
+    <section id="stamp-mode" class="mode-section">
+        <div class="stamp-btn-container">
+            <button class="stamp-btn" id="stampActionBtn" onclick="recordStamp()">
+                📍 今ここにいる！<br>
+                <span style="font-size:0.8rem; opacity:0.9;">(スタンプを押す)</span>
+            </button>
+        </div>
+
+        <div style="background:white; padding:15px; border-radius:12px; border:1px solid #eee;">
+            <h3 style="margin:0 0 10px 0; color:var(--primary-color); font-size:1rem; text-align:center;">🗾 日本制覇マップ
+            </h3>
+            <p style="text-align:center; font-size:0.8rem; color:#666; margin-bottom:15px;">
+                訪れた都道府県がオレンジになります。<br>タップで履歴を確認できます。</p>
+
+            <div class="japan-map-container" id="japanMapGrid">
+                <!-- Grid Map Generated by JS -->
+                <div class="japan-grid" id="japanGridTarget"></div>
+            </div>
+        </div>
+
+        <div style="margin-top:20px;">
+            <h3 style="font-size:1rem; color:#333; margin-left:5px;">📋 訪問履歴</h3>
+            <div id="historyList" class="history-list">
+                <!-- History Cards -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchMode('strategy')" id="nav-strategy">
+            <span class="icon">🔍</span>
+            会場攻略
+        </div>
+        <div class="nav-item" onclick="switchMode('stamp')" id="nav-stamp">
+            <span class="icon">💮</span>
+            スタンプ帳
+        </div>
+    </nav>
+
+    <!-- Load Databases (Assuming existing workflow) -->
+    <script src="venues_database.js"></script>
+    <script src="venue_helpers.js"></script>
+
+    <script>
+        // --- Global State ---
+        let currentMode = 'strategy';
+        let currentTab = 'parking';
+        let currentProcessVenue = "";
+        let allVenueData = {}; // Will load from DB + Dynamic
+
+        // --- Initialization ---
+        document.addEventListener("DOMContentLoaded", () => {
+            // Load defined venues
+            if (typeof VENUES_DATABASE !== 'undefined') {
+                // Convert old DB format to internal format if needed, or straight copy
+                // Based on venue_helpers.js logic:
+                if (typeof convertVenueData === 'function') {
+                    const converted = convertVenueData();
+                    Object.assign(allVenueData, converted);
+                } else {
+                    // Fallback
+                    allVenueData = VENUES_DATABASE;
+                }
+            }
+
+            // Setup Autocomplete
+            setupAutocomplete();
+
+            // Setup Search Input Listener
+            document.getElementById("searchBtn").addEventListener("click", () => {
+                const val = document.getElementById("venueInput").value.trim();
+                if (val) searchVenue(val);
+            });
+            document.getElementById("venueInput").addEventListener("keypress", (e) => {
+                if (e.key === 'Enter') {
+                    const val = document.getElementById("venueInput").value.trim();
+                    if (val) searchVenue(val);
+                }
+            });
+
+            // Initialize Map Grid
+            renderJapanMap();
+            loadStampHistory();
+
+            // Default Search (Zepp Haneda)
+            searchVenue("Zepp Haneda");
+        });
+
+        // --- Mode Switching ---
+        function switchMode(mode) {
+            currentMode = mode;
+
+            // Update Nav Styles
+            document.getElementById('nav-strategy').classList.toggle('active', mode === 'strategy');
+            document.getElementById('nav-stamp').classList.toggle('active', mode === 'stamp');
+
+            // Desktop Header Nav
+            if (document.getElementById('header-nav-strategy')) {
+                document.getElementById('header-nav-strategy').classList.toggle('active', mode === 'strategy');
+                document.getElementById('header-nav-stamp').classList.toggle('active', mode === 'stamp');
+            }
+
+            // Toggle Sections
+            document.getElementById('strategy-mode').classList.toggle('active', mode === 'strategy');
+            document.getElementById('stamp-mode').classList.toggle('active', mode === 'stamp');
+
+            if (mode === 'stamp') {
+                renderJapanMap(); // Refresh map
+                loadStampHistory();
+            }
+            window.scrollTo(0, 0);
+        }
+
+        // --- Logic: Strategy Mode ---
+        function switchTab(tabName) {
+            currentTab = tabName;
+
+            // Update UI
+            document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
+            // Map tabName to class
+            const map = {
+                'parking': 'tab-parking', 'lockers': 'tab-luggage', 'cafe': 'tab-timekill',
+                'toilet': 'tab-strategy', 'artists': 'tab-performers'
+            };
+            document.querySelector(`.${map[tabName]}`).classList.add('active');
+
+            renderContent();
+            updateMap();
+        }
+
+        function searchVenue(inputName) {
+            let target = inputName;
+
+            // 1. Alias Check
+            const aliases = {
+                "東京ドームシティホール": "カナデビアホール",
+                "Tokyo Dome City Hall": "カナデビアホール",
+                "TDCホール": "カナデビアホール",
+                "バリバリ": "滋賀バリハリ",
+                "バリハリ": "滋賀バリハリ",
+                "BARI-HARI": "滋賀バリハリ",
+                "barihari": "滋賀バリハリ",
+                "bari-hari": "滋賀バリハリ",
+                "Kanadevia Hall": "カナデビアホール"
+            };
+            if (aliases[target]) target = aliases[target];
+
+            // 2. Exact/Reference Check
+            let venueData = allVenueData[target];
+
+            if (!venueData) {
+                // Try fuzzy find in allVenueData keys
+                const fuzzy = Object.keys(allVenueData).find(k => k.includes(target));
+                if (fuzzy) {
+                    target = fuzzy;
+                    venueData = allVenueData[target];
+                }
+            }
+
+            if (venueData) {
+                currentProcessVenue = target;
+                if (target !== inputName) document.getElementById("venueInput").value = target;
+            } else {
+                // Dynamic Creation
+                currentProcessVenue = inputName;
+                if (typeof createDynamicVenueData === 'function') {
+                    // Quick dynamic extraction
+                    const region = ""; // Helper handles it smarter now
+                    allVenueData[inputName] = createDynamicVenueData(inputName, region);
+                }
+            }
+
+            document.getElementById("currentVenueDisplay").innerText = `📍 ${currentProcessVenue}`;
+            renderContent();
+            updateMap();
+        }
+
+        function renderContent() {
+            if (!currentProcessVenue) return;
+            const info = allVenueData[currentProcessVenue];
+            if (!info) return;
+
+            const contentDiv = document.getElementById("contentArea");
+            contentDiv.innerHTML = info.content[currentTab] || "情報がありません";
+        }
+
+        function updateMap(showVenueOnly = false) {
+            if (!currentProcessVenue) return;
+            const info = allVenueData[currentProcessVenue];
+
+            const container = document.getElementById("mapContainer");
+            let query = showVenueOnly ? info.name : (info.tabQueries[currentTab] || info.name);
+
+            // LatLng force logic
+            let extra = "";
+            if (info.coords && info.coords.lat) {
+                if (showVenueOnly) query = `${info.coords.lat},${info.coords.lng}`;
+                extra = `&center=${info.coords.lat},${info.coords.lng}&sll=${info.coords.lat},${info.coords.lng}`;
+            }
+
+            container.innerHTML = `
+                <div style="position: relative; width: 100%; height: 100%;">
+                    <div class="map-placeholder" style="position: absolute; inset: 0; z-index: 2;">
+                        <div class="spinner"></div>
+                        &nbsp;地図を読み込み中...
+                    </div>
+                
+                <iframe src="https://maps.google.com/maps?q=${encodeURIComponent(query)}${extra}&z=15&output=embed" 
+                style="width:100%; height:100%; border:0; opacity:0; transition:opacity 0.5s;"
+                allowfullscreen="" 
+                onload="this.style.opacity='1'; this.parentNode.querySelector('.map-placeholder').style.display='none';"></iframe>
+                </div>
+            `;
+
+            // Add External Link Button underneath (Universal Fallback)
+            const extLink = info.coords && info.coords.lat
+                ? `${info.coords.lat},${info.coords.lng}`
+                : encodeURIComponent(query);
+
+            container.innerHTML += `
+            <div style="text-align:right; margin-top:5px; display:flex; justify-content:flex-end; gap:8px;">
+                <a href="https://www.google.com/maps/search/?api=1&query=${extLink}" target="_blank" style="background:#fff; color:#333; border:1px solid #ccc; padding:5px 10px; border-radius:4px; text-decoration:none; font-size:0.8rem; display:flex; align-items:center; gap:4px;">
+                    <span style="color:#EA4335;">📍</span> Googleマップで会場を開く
+                </a>
+               <button onclick="updateMap(true)" style="background:#ff4081; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
+                    🎯 中心に戻す
+                </button>
+               ${showVenueOnly ? `<button onclick="updateMap(false)" style="background:#555; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.8rem;">🔙 検索結果に戻る</button>` : ''}
+            </div>`;
+        }
+
+        // --- Auto Complete Helper ---
+        function setupAutocomplete() {
+            const inp = document.getElementById("venueInput");
+            const list = document.getElementById("autocomplete-list");
+
+            inp.addEventListener("input", function () {
+                const val = this.value;
+                list.innerHTML = "";
+                if (!val) return;
+
+                Object.keys(allVenueData).forEach(name => {
+                    if (name.toLowerCase().includes(val.toLowerCase())) {
+                        const div = document.createElement("div");
+                        div.innerText = name;
+                        div.onclick = () => {
+                            inp.value = name;
+                            list.innerHTML = "";
+                            searchVenue(name);
+                        };
+                        list.appendChild(div);
+                    }
+                });
+            });
+
+            // Close list when clicking elsewhere
+            document.addEventListener("click", function (e) {
+                if (e.target !== inp) {
+                    list.innerHTML = "";
+                }
+            });
+        }
+
+        // --- Logic: Stamp Mode ---
+        const STAMP_KEY = 'guideboxx_stamps';
+
+        function recordStamp() {
+            // Get current processing venue as the location
+            // Use 'currentProcessVenue' from Strategy Mode if available
+            if (!currentProcessVenue) {
+                alert("まずは「会場攻略」で会場を検索してください！");
+                switchMode('strategy');
+                return;
+            }
+
+            const venue = currentProcessVenue;
+            let region = "その他";
+
+            // Try to find region info
+            if (allVenueData[venue] && allVenueData[venue].region) {
+                region = allVenueData[venue].region;
+            }
+
+            // Normalize for map coloring (Must match Pref names)
+            const prefList = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城", "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山", "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重", "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根", "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡", "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄"];
+
+            let mapRegion = region;
+            const foundPref = prefList.find(p => region.includes(p));
+            if (foundPref) mapRegion = foundPref;
+            else {
+                if (region.includes("新宿") || region.includes("渋谷") || region.includes("池袋") || venue.includes("Tokyo") || venue.includes("東京")) mapRegion = "東京";
+                if (region.includes("横浜") || venue.includes("Yokohama")) mapRegion = "神奈川";
+                if (region.includes("大阪") || venue.includes("Osaka")) mapRegion = "大阪";
+            }
+
+            // Check for duplicate (Same venue, Same day)
+            // Use consistent formatting options for comparison
+            const dateOpts = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            const now = new Date();
+            const todayStr = now.toLocaleDateString('ja-JP', dateOpts); // e.g. "2024/01/01" or "2024/1/1" depending on engine, but consistent within same session
+
+            const history = getHistory();
+
+            const isDuplicate = history.some(item => {
+                // item.date is full string "YYYY/MM/DD HH:MM"
+                // Extract just the date part (first 10 chars usually, but splitting by space is safer if format varies)
+                // Actually, let's just check if it StartsWith the todayStr.
+                // But wait, if formats differ? 
+                // Let's rely on standard JS date parsing from the saved string? No, strings vary.
+                // Best bet: The saved string was created with the SAME logic below.
+                const itemDatePart = item.date.split(' ')[0];
+                return item.venue === venue && itemDatePart === todayStr;
+            });
+
+            if (isDuplicate) {
+                alert(`今日は既に「${venue}」のスタンプを押しています！\n1日1回までです。`);
+                return;
+            }
+
+            const stamp = {
+                venue: venue,
+                region: mapRegion,
+                displayRegion: region,
+                // Save full date with same locale options
+                date: now.toLocaleString('ja-JP', { ...dateOpts, hour: '2-digit', minute: '2-digit' })
+            };
+
+            history.unshift(stamp);
+            localStorage.setItem(STAMP_KEY, JSON.stringify(history));
+
+            alert(`💮 スタンプ完了！\n📍 ${venue} (${mapRegion})\n\n日本制覇マップを更新しました！`);
+            renderJapanMap(); // Update map colors
+            loadStampHistory(); // Update list
+        }
+
+        function getHistory() {
+            const data = localStorage.getItem(STAMP_KEY);
+            return data ? JSON.parse(data) : [];
+        }
+
+        function loadStampHistory(filterRegion = null) {
+            const list = document.getElementById("historyList");
+            list.innerHTML = "";
+
+            let data = getHistory();
+            if (filterRegion) {
+                data = data.filter(s => s.region.includes(filterRegion));
+            }
+
+            if (data.length === 0) {
+                list.innerHTML = `<div style="text-align:center; color:#999; padding:20px;">履歴がありません</div>`;
+                return;
+            }
+
+            data.forEach(item => {
+                list.innerHTML += `
+                <div class="history-card">
+                    <div style="font-weight:bold; font-size:1.1rem; color:var(--primary-color);">${item.venue}</div>
+                    <div style="font-size:0.8rem; color:#666;">
+                        <span style="font-size:1rem;">💮</span>
+                        <span>${item.date}</span>
+                        <span style="margin-left:10px; background:#f0f0f0; padding:2px 8px; border-radius:10px; font-weight:bold;">${item.displayRegion}</span>
+                    </div>
+                </div>`;
+            });
+        }
+
+        // --- Japan Map Grid Logic ---
+        // Refined Grid Layout (1-based coords)
+        // Format: [Name, Row, Col, w, h] 
+        // 16 Cols wide grid.
+        const japanGridData = [
+            // Hokkaido (Top Right - shift left a bit)
+            ["北海道", 1, 14, 3, 2],
+
+            // Tohoku (Below Hokkaido)
+            ["青森", 3, 13, 1, 1],
+            ["秋田", 4, 12, 1, 1], ["岩手", 4, 13, 1, 1],
+            ["山形", 5, 12, 1, 1], ["宮城", 5, 13, 1, 1],
+            ["福島", 6, 13, 1, 1],
+
+            // Kanto (Below Tohoku, Right Side)
+            ["群馬", 7, 12, 1, 1], ["栃木", 7, 13, 1, 1], ["茨城", 8, 14, 1, 1],
+            ["埼玉", 8, 12, 1, 1], ["東京", 9, 12, 1, 1], ["千葉", 9, 13, 1, 1], ["神奈川", 9, 11, 1, 1],
+
+            // Chubu / Hokuriku (Left of Kanto)
+            ["新潟", 6, 11, 1, 1],
+            ["富山", 6, 10, 1, 1], ["長野", 7, 11, 1, 1], ["山梨", 8, 11, 1, 1],
+            ["石川", 5, 9, 1, 1], ["福井", 6, 9, 1, 1], ["岐阜", 7, 10, 1, 1], ["静岡", 9, 10, 1, 1], ["愛知", 8, 9, 1, 1],
+
+            // Kansai (Left of Chubu)
+            ["滋賀", 7, 9, 1, 1], ["三重", 9, 9, 1, 1],
+            ["京都", 7, 8, 1, 1], ["奈良", 8, 8, 1, 1], ["和歌山", 9, 8, 1, 1],
+            ["大阪", 8, 7, 1, 1], ["兵庫", 7, 7, 1, 1],
+
+            // Chugoku (Left of Kansai)
+            ["鳥取", 7, 6, 1, 1], ["岡山", 8, 6, 1, 1],
+            ["島根", 7, 5, 1, 1], ["広島", 8, 5, 1, 1],
+            ["山口", 8, 4, 1, 1],
+
+            // Shikoku (Below Chugoku)
+            ["香川", 9, 6, 1, 1], ["徳島", 10, 7, 1, 1],
+            ["愛媛", 10, 5, 1, 1], ["高知", 11, 6, 1, 1],
+
+            // Kyushu (Far Left)
+            // Shift Kyushu left to avoid overlap
+            ["福岡", 8, 3, 1, 1], ["大分", 9, 3, 1, 1],
+            ["佐賀", 9, 2, 1, 1],
+            ["長崎", 9, 1, 1, 1], ["熊本", 10, 2, 1, 1], ["宮崎", 11, 3, 1, 1],
+            ["鹿児島", 11, 2, 1, 1],
+
+            // Okinawa (Bottom Left Corner)
+            ["沖縄", 13, 1, 1, 1]
+        ];
+
+        function renderJapanMap() {
+            const container = document.getElementById("japanGridTarget");
+            container.innerHTML = "";
+            const history = getHistory();
+
+            // Create loop
+            for (const item of japanGridData) {
+                const name = item[0];
+                const r = item[1];
+                const c = item[2];
+                const w = item[3] || 1;
+                const h = item[4] || 1;
+
+                const cell = document.createElement("div");
+                cell.className = "pref-box";
+                cell.innerText = name[0]; // First char
+                cell.title = name;
+                cell.style.gridRow = `${r} / span ${h}`;
+                cell.style.gridColumn = `${c} / span ${w}`;
+
+                // Check visited
+                const isVisited = history.some(h => {
+                    return h.region.includes(name);
+                });
+
+                if (isVisited) {
+                    cell.classList.add("visited");
+                }
+
+                cell.onclick = () => {
+                    if (isVisited) loadStampHistory(name);
+                    else alert(`${name}はまだ訪れていません！`);
+                };
+
+                container.appendChild(cell);
+            }
+        }
+    </script>
+</body>
+
+</html>
