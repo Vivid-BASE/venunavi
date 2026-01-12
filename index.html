@@ -557,8 +557,671 @@
     </nav>
 
     <!-- Load Databases (Assuming existing workflow) -->
-    <script src="venues_database.js"></script>
-    <script src="venue_helpers.js"></script>
+<script>
+// 全国イベント会場データベース
+const VENUES_DATABASE = {
+    // 滋賀県
+    "滋賀バリハリ": {
+        name: "滋賀バリハリ",
+        url: "http://ks-house7.moo.jp/",
+        region: "滋賀県",
+        category: "ライブハウス",
+        lat: 35.063672,
+        lng: 136.021259,
+        tabs: {
+            parking: { title: "🚗 駐車場情報", mapLat: 35.063672, mapLng: 136.021259 },
+            luggage: { title: "🎒 荷物・ロッカー", mapLat: 35.063672, mapLng: 136.021259 },
+            timekill: { title: "☕ 暇つぶし", mapLat: 35.063672, mapLng: 136.021259 },
+            toilet: { title: "🚻 トイレ情報", mapLat: 35.063672, mapLng: 136.021259 },
+            performers: { title: "🎸 出演者向け", mapLat: 35.063672, mapLng: 136.021259 }
+        }
+    },
+    // 東京都
+    "日本武道館": {
+        name: "日本武道館",
+        url: "https://www.nipponbudokan.or.jp/",
+        region: "東京都",
+        category: "アリーナ",
+        lat: 35.6938,
+        lng: 139.7503,
+        tabs: {
+            parking: {
+                title: "🚗 駐車場情報",
+                content: `<h3>周辺駐車場</h3>
+<p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p>
+<ul>
+<li><strong>北の丸駐車場</strong> - 徒歩5分 / 最大料金なし / 混雑しやすい</li>
+<li><strong>九段下駅周辺コインパーキング</strong> - 徒歩10分 / 最大1,500円程度</li>
+</ul>`,
+                mapLat: 35.6938,
+                mapLng: 139.7503
+            },
+            luggage: {
+                title: "🎒 荷物・ロッカー",
+                content: `<h3>コインロッカー</h3>
+<ul>
+<li><strong>九段下駅</strong> - 改札内外に多数あり</li>
+<li><strong>飯田橋駅</strong> - 大型ロッカーあり</li>
+<li>⚠️ イベント当日は早めに埋まります</li>
+</ul>`,
+                mapLat: 35.6955,
+                mapLng: 139.7527
+            },
+            timekill: {
+                title: "☕ 暇つぶし",
+                content: `<h3>待機スポット</h3>
+<ul>
+<li><strong>北の丸公園</strong> - 武道館すぐ / 自然豊か</li>
+<li><strong>神保町書店街</strong> - 徒歩15分 / カフェ多数</li>
+<li><strong>東京ドームシティ</strong> - 徒歩20分</li>
+</ul>`,
+                mapLat: 35.6920,
+                mapLng: 139.7520
+            },
+            toilet: {
+                title: "🚻 トイレ情報",
+                content: `<h3>トイレ事情</h3>
+<ul>
+<li><strong>北の丸公園</strong> - 会場周辺に公衆トイレが複数あります。</li>
+<li><strong>会場内</strong> - 女性用は非常に混雑します。九段下駅であらかじめ済ませましょう。</li>
+</ul>`,
+                mapLat: 35.6938,
+                mapLng: 139.7503
+            },
+            performers: {
+                title: "🎸 出演者向け",
+                content: `<h3>搬入・楽器店</h3>
+<ul>
+<li><strong>搬入口</strong> - 北側（要事前確認）</li>
+<li><strong>御茶ノ水楽器街</strong> - 徒歩20分 / 弦・スティック等</li>
+</ul>`,
+                mapLat: 35.6938,
+                mapLng: 139.7503
+            }
+        }
+    },
+
+    "Zepp Haneda": {
+        name: "Zepp Haneda",
+        url: "https://www.zepp.co.jp/hall/haneda/",
+        region: "東京都",
+        category: "ライブハウス",
+        lat: 35.5494,
+        lng: 139.7798,
+        tabs: {
+            parking: {
+                title: "🚗 駐車場情報",
+                content: `<h3>周辺駐車場</h3>
+<p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p>
+<ul>
+<li><strong>羽田空港第3ターミナル駐車場</strong> - 徒歩5分 / 30分毎150円</li>
+<li>⚠️ イベント時は満車の可能性あり。早めの来場を推奨</li>
+</ul>`,
+                mapLat: 35.5494,
+                mapLng: 139.7798
+            },
+            luggage: {
+                title: "🎒 荷物・ロッカー",
+                content: `<h3>コインロッカー</h3>
+<ul>
+<li><strong>羽田空港第3ターミナル</strong> - 徒歩3分 / 大型ロッカー多数</li>
+<li><strong>天空橋駅</strong> - 改札内にあり</li>
+<li>⚠️ 空港利用客も多いため、早めの確保を</li>
+</ul>`,
+                mapLat: 35.5494,
+                mapLng: 139.7798
+            },
+            timekill: {
+                title: "☕ 暇つぶし",
+                content: `<h3>待機スポット</h3>
+<ul>
+<li><strong>羽田空港第3ターミナル</strong> - 徒歩3分 / フードコート・展望デッキ</li>
+<li><strong>TIAT SKY HALL</strong> - 同じ建物内 / カフェあり</li>
+<li><strong>羽田イノベーションシティ</strong> - 徒歩10分 / 商業施設</li>
+</ul>`,
+                mapLat: 35.5494,
+                mapLng: 139.7798
+            },
+            toilet: {
+                title: "🚻 トイレ情報",
+                content: `<h3>トイレ事情</h3>
+<ul>
+<li><strong>羽田イノベーションシティ</strong> - 新しくて綺麗なトイレが多く穴場です。</li>
+<li><strong>HIcity</strong> - 会場直結ではありませんが、徒歩圏内として利用可能。</li>
+</ul>`,
+                mapLat: 35.5494,
+                mapLng: 139.7798
+            },
+            performers: {
+                title: "🎸 出演者向け",
+                content: `<h3>搬入・楽器店</h3>
+<ul>
+<li><strong>搬入口</strong> - 建物裏側（要事前確認）</li>
+<li><strong>最寄り楽器店</strong> - 蒲田・品川方面まで移動が必要</li>
+<li>⚠️ 空港近くのため、楽器は事前準備推奨</li>
+</ul>`,
+                mapLat: 35.5494,
+                mapLng: 139.7798
+            }
+        }
+    },
+
+    "横浜アリーナ": {
+        name: "横浜アリーナ",
+        region: "神奈川県",
+        category: "アリーナ",
+        lat: 35.5089,
+        lng: 139.6175,
+        tabs: {
+            parking: {
+                title: "🚗 駐車場情報",
+                content: `<h3>周辺駐車場</h3>
+<p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p>
+<ul>
+<li><strong>新横浜駅周辺コインパーキング</strong> - 徒歩5-10分 / 最大1,500-2,000円</li>
+<li><strong>新横浜プリンスホテル駐車場</strong> - 徒歩3分 / 30分毎300円</li>
+<li>⚠️ イベント時は早めに満車になります</li>
+</ul>`,
+                mapLat: 35.5089,
+                mapLng: 139.6175
+            },
+            luggage: {
+                title: "🎒 荷物・ロッカー",
+                content: `<h3>コインロッカー</h3>
+<ul>
+<li><strong>新横浜駅</strong> - 改札内外に多数 / 大型ロッカーあり</li>
+<li><strong>キュービックプラザ新横浜</strong> - 駅ビル内</li>
+<li>⚠️ 大規模イベント時は早めに埋まります</li>
+</ul>`,
+                mapLat: 35.5089,
+                mapLng: 139.6175
+            },
+            timekill: {
+                title: "☕ 暇つぶし",
+                content: `<h3>待機スポット</h3>
+<ul>
+<li><strong>キュービックプラザ新横浜</strong> - 徒歩3分 / カフェ・レストラン多数</li>
+<li><strong>新横浜ラーメン博物館</strong> - 徒歩5分</li>
+<li><strong>日産スタジアム周辺</strong> - 徒歩10分 / 公園あり</li>
+</ul>`,
+                mapLat: 35.5089,
+                mapLng: 139.6175
+            },
+            toilet: {
+                title: "🚻 トイレ情報",
+                content: `<h3>トイレ事情</h3>
+<ul>
+<li><strong>会場周辺</strong> - 横浜アリーナ周辺にはコンビニ・カフェが多いですが、イベント時は混雑・利用制限があります。</li>
+<li><strong>新横浜駅</strong> - 改札内のトイレは混みます。駅ビルの上層階が狙い目。</li>
+</ul>`,
+                mapLat: 35.5089,
+                mapLng: 139.6175
+            },
+            performers: {
+                title: "🎸 出演者向け",
+                content: `<h3>搬入・楽器店</h3>
+<ul>
+<li><strong>搬入口</strong> - 北側（要事前確認）</li>
+<li><strong>イシバシ楽器 横浜店</strong> - 横浜駅 / 電車で10分</li>
+<li><strong>島村楽器 ららぽーと横浜店</strong> - 鴨居駅 / 電車で5分</li>
+</ul>`,
+                mapLat: 35.5089,
+                mapLng: 139.6175
+            }
+        }
+    },
+
+    // 大阪府
+    "大阪城ホール": {
+        name: "大阪城ホール",
+        region: "大阪府",
+        category: "アリーナ",
+        lat: 34.6873,
+        lng: 135.5262,
+        tabs: {
+            parking: { title: "🚗 駐車場情報", content: `<h3>周辺駐車場</h3><p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p><ul><li><strong>森ノ宮駅周辺パーキング</strong> - 徒歩5-10分 / 最大1,500円程度</li></ul>`, mapLat: 34.6873, mapLng: 135.5262 },
+            luggage: { title: "🎒 荷物・ロッカー", content: `<h3>コインロッカー</h3><ul><li><strong>森ノ宮駅</strong> - 改札内外に多数</li><li><strong>大阪城公園駅</strong> - 改札内にあり</li></ul>`, mapLat: 34.6873, mapLng: 135.5262 },
+            timekill: { title: "☕ 暇つぶし", content: `<h3>待機スポット</h3><ul><li><strong>大阪城公園</strong> - すぐ / 広大な公園</li><li><strong>もりのみやキューズモール</strong> - 徒歩5分</li></ul>`, mapLat: 34.6873, mapLng: 135.5262 },
+            toilet: { title: "🚻 トイレ情報", content: `<h3>トイレ事情</h3><ul><li><strong>大阪城公園</strong> - 公園内に公衆トイレ多数。</li><li><strong>JOB-SURE</strong> - 城ホール手前のカフェ・商業エリアも利用可。</li></ul>`, mapLat: 34.6873, mapLng: 135.5262 },
+            performers: { title: "🎸 出演者向け", content: `<h3>搬入・楽器店</h3><ul><li><strong>搬入口</strong> - 要事前確認</li><li><strong>イシバシ楽器 梅田店</strong> - 梅田駅 / 電車で15分</li></ul>`, mapLat: 34.6873, mapLng: 135.5262 }
+        }
+    },
+
+    "Zepp Osaka Bayside": {
+        name: "Zepp Osaka Bayside",
+        region: "大阪府",
+        category: "ライブハウス",
+        lat: 34.6548,
+        lng: 135.4321,
+        tabs: {
+            parking: { title: "🚗 駐車場情報", content: `<h3>周辺駐車場</h3><p>⚠️ ユニバーサルシティウォーク大阪の駐車場が利用可能ですが、混雑します。</p><ul><li><strong>ユニバーサルシティウォーク駐車場</strong> - 徒歩1分 / 30分毎400円</li></ul>`, mapLat: 34.6548, mapLng: 135.4321 },
+            luggage: { title: "🎒 荷物・ロッカー", content: `<h3>コインロッカー</h3><ul><li><strong>ユニバーサルシティ駅</strong> - 改札内外に多数</li><li><strong>ユニバーサルシティウォーク</strong> - 施設内</li></ul>`, mapLat: 34.6548, mapLng: 135.4321 },
+            timekill: { title: "☕ 暇つぶし", content: `<h3>待機スポット</h3><ul><li><strong>ユニバーサルシティウォーク大阪</strong> - すぐ / カフェ・レストラン多数</li><li><strong>USJ周辺</strong> - 徒歩5分</li></ul>`, mapLat: 34.6548, mapLng: 135.4321 },
+            toilet: { title: "🚻 トイレ情報", content: `<h3>トイレ事情</h3><ul><li><strong>ユニバーサルシティウォーク</strong> - 会場に隣接しており、トイレも多数ありますが、一般客で混みます。</li><li><strong>桜島駅</strong> - 少し歩きますが空いています。</li></ul>`, mapLat: 34.6548, mapLng: 135.4321 },
+            performers: { title: "🎸 出演者向け", content: `<h3>搬入・楽器店</h3><ul><li><strong>搬入口</strong> - 施設裏側</li><li><strong>最寄り楽器店</strong> - 梅田・難波方面まで移動が必要</li></ul>`, mapLat: 34.6548, mapLng: 135.4321 }
+        }
+    },
+
+    "さいたまスーパーアリーナ": {
+        name: "さいたまスーパーアリーナ",
+        region: "埼玉県",
+        category: "アリーナ",
+        lat: 35.8946,
+        lng: 139.6309,
+        tabs: {
+            parking: { title: "🚗 駐車場情報", content: `<h3>周辺駐車場</h3><p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p><ul><li><strong>さいたま新都心駅周辺パーキング</strong> - 徒歩5-10分 / 最大1,500-2,000円</li></ul>`, mapLat: 35.8946, mapLng: 139.6309 },
+            luggage: { title: "🎒 荷物・ロッカー", content: `<h3>コインロッカー</h3><ul><li><strong>さいたま新都心駅</strong> - 改札内外に多数</li><li><strong>コクーンシティ</strong> - 商業施設内</li></ul>`, mapLat: 35.8946, mapLng: 139.6309 },
+            timekill: { title: "☕ 暇つぶし", content: `<h3>待機スポット</h3><ul><li><strong>コクーンシティ</strong> - 徒歩3分 / 大型商業施設</li><li><strong>けやきひろば</strong> - すぐ / 屋外広場</li></ul>`, mapLat: 35.8946, mapLng: 139.6309 },
+            toilet: { title: "🚻 トイレ情報", content: `<h3>トイレ事情</h3><ul><li><strong>けやきひろば</strong> - 地下と1階にトイレがあります。</li><li><strong>コクーンシティ</strong> - 非常に広いため、トイレには困りませんが、移動に時間がかかります。</li></ul>`, mapLat: 35.8946, mapLng: 139.6309 },
+            performers: { title: "🎸 出演者向け", content: `<h3>搬入・楽器店</h3><ul><li><strong>搬入口</strong> - 要事前確認</li><li><strong>島村楽器 大宮店</strong> - 大宮駅 / 電車で5分</li></ul>`, mapLat: 35.8946, mapLng: 139.6309 }
+        }
+    },
+
+    "Zepp Shinjuku": {
+        name: "Zepp Shinjuku",
+        region: "東京都",
+        category: "ライブハウス",
+        lat: 35.6938,
+        lng: 139.7005,
+        tabs: {
+            parking: { title: "🚗 駐車場情報", content: `<h3>周辺駐車場</h3><p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p><ul><li><strong>新宿駅周辺パーキング</strong> - 徒歩5-10分 / 30分毎400-600円</li></ul>`, mapLat: 35.6938, mapLng: 139.7005 },
+            luggage: { title: "🎒 荷物・ロッカー", content: `<h3>コインロッカー</h3><ul><li><strong>新宿駅</strong> - 改札内外に多数</li><li><strong>新宿三丁目駅</strong> - 改札内にあり</li></ul>`, mapLat: 35.6938, mapLng: 139.7005 },
+            timekill: { title: "☕ 暇つぶし", content: `<h3>待機スポット</h3><ul><li><strong>新宿駅周辺</strong> - カフェ・レストラン無数</li><li><strong>新宿御苑</strong> - 徒歩10分 / 公園</li></ul>`, mapLat: 35.6938, mapLng: 139.7005 },
+            toilet: { title: "🚻 トイレ情報", content: `<h3>トイレ事情</h3><ul><li><strong>歌舞伎町タワー</strong> - 2階のスタバ横などにトイレがありますが、一般客・観光客で激混みです。</li><li><strong>西武新宿駅</strong> - 地下のPePeなどが利用しやすいです。</li></ul>`, mapLat: 35.6938, mapLng: 139.7005 },
+            performers: { title: "🎸 出演者向け", content: `<h3>搬入・楽器店</h3><ul><li><strong>搬入口</strong> - 要事前確認</li><li><strong>御茶ノ水楽器街</strong> - 電車で15分</li></ul>`, mapLat: 35.6938, mapLng: 139.7005 }
+        }
+    },
+
+    "Zepp DiverCity": {
+        name: "Zepp DiverCity",
+        region: "東京都",
+        category: "ライブハウス",
+        lat: 35.6254,
+        lng: 139.7756,
+        tabs: {
+            parking: { title: "🚗 駐車場情報", content: `<h3>周辺駐車場</h3><ul><li><strong>ダイバーシティ東京駐車場</strong> - 徒歩1分 / 30分毎500円</li><li><strong>お台場周辺パーキング</strong> - 徒歩5-10分</li></ul>`, mapLat: 35.6254, mapLng: 139.7756 },
+            luggage: { title: "🎒 荷物・ロッカー", content: `<h3>コインロッカー</h3><ul><li><strong>ダイバーシティ東京</strong> - 施設内に多数</li><li><strong>台場駅</strong> - 改札内にあり</li></ul>`, mapLat: 35.6254, mapLng: 139.7756 },
+            timekill: { title: "☕ 暇つぶし", content: `<h3>待機スポット</h3><ul><li><strong>ダイバーシティ東京</strong> - すぐ / 大型商業施設</li><li><strong>お台場海浜公園</strong> - 徒歩5分</li></ul>`, mapLat: 35.6254, mapLng: 139.7756 },
+            toilet: { title: "🚻 トイレ情報", content: `<h3>トイレ事情</h3><ul><li><strong>ダイバーシティ東京</strong> - 各階にトイレがあり非常に便利です。</li><li><strong>フードコート</strong> - 広いので比較的回転が早いです。</li></ul>`, mapLat: 35.6254, mapLng: 139.7756 },
+            performers: { title: "🎸 出演者向け", content: `<h3>搬入・楽器店</h3><ul><li><strong>搬入口</strong> - 施設裏側</li><li><strong>最寄り楽器店</strong> - 品川・新橋方面まで移動が必要</li></ul>`, mapLat: 35.6254, mapLng: 139.7756 }
+        }
+    },
+    // --- Manual Fixes for Search Ambiguity ---
+    "ワイルドサイド東京": {
+        name: "ワイルドサイド東京",
+        url: "https://ws-tokyo.com/",
+        region: "新宿",
+        category: "ライブハウス",
+        lat: 35.69129,
+        lng: 139.710895,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    // 東京都 (New Rename)
+    "カナデビアホール": {
+        name: "カナデビアホール",
+        url: "https://www.tokyo-dome.co.jp/hall/",
+        region: "東京都",
+        category: "ホール",
+        lat: 35.7030,
+        lng: 139.7548,
+        tabs: {
+            parking: { title: "🚗 駐車場情報", content: "" },
+            luggage: { title: "🎒 荷物・ロッカー", content: "" },
+            timekill: { title: "☕ 暇つぶし", content: "" },
+            toilet: { title: "🚻 トイレ情報", content: "" },
+            performers: { title: "🎸 出演者向け", content: "" }
+        }
+    },
+    "Spotify O-EAST": {
+        name: "Spotify O-EAST",
+        url: "https://shibuya-o.com/east/",
+        region: "東京都",
+        category: "ライブハウス",
+        lat: 35.659359,
+        lng: 139.700027,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "LIQUIDROOM": {
+        name: "LIQUIDROOM",
+        url: "https://www.liquidroom.net/",
+        region: "東京都",
+        category: "ライブハウス",
+        lat: 35.6473,
+        lng: 139.7126,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "新宿LOFT": {
+        name: "新宿LOFT",
+        url: "https://www.loft-prj.co.jp/LOFT/",
+        region: "東京都",
+        category: "ライブハウス",
+        lat: 35.69533,
+        lng: 139.70264,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "下北沢SHELTER": {
+        name: "下北沢SHELTER",
+        url: "https://www.loft-prj.co.jp/SHELTER/",
+        region: "東京都",
+        category: "ライブハウス",
+        lat: 35.659868,
+        lng: 139.667292,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    // --- Zepp Chain ---
+    "Zepp Sapporo": {
+        name: "Zepp Sapporo",
+        url: "https://www.zepp.co.jp/hall/sapporo/",
+        region: "北海道",
+        category: "ライブハウス",
+        lat: 43.0493,
+        lng: 141.3532,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "Zepp Nagoya": {
+        name: "Zepp Nagoya",
+        url: "https://www.zepp.co.jp/hall/nagoya/",
+        region: "愛知県",
+        category: "ライブハウス",
+        lat: 35.16327,
+        lng: 136.87979,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "Zepp Namba": {
+        name: "Zepp Namba",
+        url: "https://www.zepp.co.jp/hall/namba/",
+        region: "大阪府",
+        category: "ライブハウス",
+        lat: 34.657423,
+        lng: 135.501253,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "Zepp Osaka Bayside": {
+        name: "Zepp Osaka Bayside",
+        url: "https://www.zepp.co.jp/hall/osakabayside/",
+        region: "大阪府",
+        category: "ライブハウス",
+        lat: 34.662008,
+        lng: 135.434812,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "Zepp DiverCity": {
+        name: "Zepp DiverCity",
+        url: "https://www.zepp.co.jp/hall/divercity/",
+        region: "東京都",
+        category: "ライブハウス",
+        lat: 35.625167,
+        lng: 139.775361,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "Zepp Haneda": {
+        name: "Zepp Haneda",
+        url: "https://www.zepp.co.jp/hall/haneda/",
+        region: "東京都",
+        category: "ライブハウス",
+        lat: 35.5457,
+        lng: 139.7423,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "KT Zepp Yokohama": {
+        name: "KT Zepp Yokohama",
+        url: "https://www.zepp.co.jp/hall/yokohama/",
+        region: "神奈川県",
+        category: "ライブハウス",
+        lat: 35.4566,
+        lng: 139.6335,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "Zepp Fukuoka": {
+        name: "Zepp Fukuoka",
+        url: "https://www.zepp.co.jp/hall/fukuoka/",
+        region: "福岡県",
+        category: "ライブハウス",
+        lat: 33.590096,
+        lng: 130.401675,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "Zepp Shinjuku": {
+        name: "Zepp Shinjuku",
+        url: "https://www.zepp.co.jp/hall/shinjuku/",
+        region: "東京都",
+        category: "ライブハウス",
+        lat: 35.695438,
+        lng: 139.700595,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    // --- Major Domes & Arenas ---
+    "東京ドーム": {
+        name: "東京ドーム",
+        url: "https://www.tokyo-dome.co.jp/dome/",
+        region: "東京都",
+        category: "ドーム",
+        lat: 35.705677,
+        lng: 139.751389,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "京セラドーム大阪": {
+        name: "京セラドーム大阪",
+        url: "https://www.kyoceradome-osaka.jp/",
+        region: "大阪府",
+        category: "ドーム",
+        lat: 34.669228,
+        lng: 135.475601,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "バンテリンドーム ナゴヤ": {
+        name: "バンテリンドーム ナゴヤ",
+        url: "https://www.nagoya-dome.co.jp/",
+        region: "愛知県",
+        category: "ドーム",
+        lat: 35.1873,
+        lng: 136.9489,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "PayPayドーム": {
+        name: "PayPayドーム",
+        url: "https://www.softbankhawks.co.jp/stadium/",
+        region: "福岡県",
+        category: "ドーム",
+        lat: 33.5947,
+        lng: 130.3639,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "札幌ドーム": {
+        name: "札幌ドーム",
+        url: "https://www.sapporo-dome.co.jp/",
+        region: "北海道",
+        category: "ドーム",
+        lat: 43.0152,
+        lng: 141.4116,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "さいたまスーパーアリーナ": {
+        name: "さいたまスーパーアリーナ",
+        url: "https://www.saitama-arena.co.jp/",
+        region: "埼玉県",
+        category: "アリーナ",
+        lat: 35.894920,
+        lng: 139.630814,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "横浜アリーナ": {
+        name: "横浜アリーナ",
+        url: "https://www.yokohama-arena.co.jp/",
+        region: "神奈川県",
+        category: "アリーナ",
+        lat: 35.512389,
+        lng: 139.620056,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "ぴあアリーナMM": {
+        name: "ぴあアリーナMM",
+        url: "https://pia-arena-mm.jp/",
+        region: "神奈川県",
+        category: "アリーナ",
+        lat: 35.4578,
+        lng: 139.6378,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "Kアリーナ横浜": {
+        name: "Kアリーナ横浜",
+        url: "https://k-arena.com/",
+        region: "神奈川県",
+        category: "アリーナ",
+        lat: 35.4638,
+        lng: 139.6332,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    },
+    "国立代々木競技場": {
+        name: "国立代々木競技場",
+        url: "https://www.jpnsport.go.jp/yoyogi/",
+        region: "東京都",
+        category: "アリーナ",
+        lat: 35.6669,
+        lng: 139.7005,
+        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
+    }
+};
+</script>
+<script>
+// Helper function to convert old venueData format to new VENUES_DATABASE format
+function convertVenueData() {
+    const converted = {};
+
+    for (const [venueName, venueInfo] of Object.entries(VENUES_DATABASE)) {
+        // Safe name for query (replace spaces with +)
+        const safeName = venueName.replace(/\s/g, '+');
+
+        // Helper to create buttons
+        const createSearchBtns = (keyword) => {
+            const query = encodeURIComponent(`${venueName} ${keyword}`);
+            let officialBtn = "";
+            if (venueInfo.url) {
+                officialBtn = `<a href="${venueInfo.url}" target="_blank" style="display:block; margin-bottom:10px; background: linear-gradient(90deg, #00e5ff, #e040fb); color:white; text-decoration:none; padding:10px; border-radius:8px; text-align:center; font-weight:bold; font-size:0.9rem;">🏠 ${venueName} 公式サイト</a>`;
+            } else {
+                const officialQuery = encodeURIComponent(`${venueName} 公式サイト`);
+                officialBtn = `<a href="https://www.google.com/search?q=${officialQuery}" target="_blank" style="display:block; margin-bottom:10px; background:#444; color:#ccc; text-decoration:none; padding:10px; border-radius:8px; text-align:center; font-size:0.9rem;">🔎 公式サイトを検索</a>`;
+            }
+
+            return `
+            <div style="margin-top: 15px; border-top: 1px dashed #444; padding-top: 10px;">
+                ${officialBtn}
+                <p style="font-size:0.8rem; color:#aaa; margin:0 0 5px 0;">🔍 最新情報を検索:</p>
+                <div style="display:flex; gap:10px;">
+                    <a href="https://www.google.com/search?q=${query}" target="_blank" style="flex:1; background:#333; color:white; text-decoration:none; padding:8px; border-radius:4px; text-align:center; font-size:0.8rem;">Google検索</a>
+                    <a href="https://twitter.com/search?q=${query}&f=live" target="_blank" style="flex:1; background:#1da1f2; color:white; text-decoration:none; padding:8px; border-radius:4px; text-align:center; font-size:0.8rem;">X (Twitter)</a>
+                </div>
+            </div>`;
+        };
+
+        // Construct Robust Queries
+        const lat = venueInfo.lat || (venueInfo.coords ? venueInfo.coords.lat : null);
+        const lng = venueInfo.lng || (venueInfo.coords ? venueInfo.coords.lng : null);
+
+        // Strategy: Use "VenueName Region" to guide the search
+        // This is robust for the Embed API which struggles with raw coordinates in search mode.
+        const region = venueInfo.region || "";
+        const param = region ? `${venueName} ${region}` : venueName;
+
+        converted[venueName] = {
+            coords: { lat: lat, lng: lng },
+            region: venueInfo.region,
+            category: venueInfo.category,
+            name: venueInfo.name,
+            tabQueries: {
+                parking: `駐車場 ${param}`,
+                lockers: `コインロッカー ${param}`,
+                cafe: `カフェ ${param}`,
+                toilet: `トイレ ${param}`,
+                artists: `楽器屋 ${param}`
+            },
+            content: {
+                parking: `<div class="info-card"><h3>${venueInfo.tabs.parking.title}</h3><p>地図で周辺の駐車場を確認できます。</p></div>` + createSearchBtns("駐車場"),
+                lockers: `<div class="info-card"><h3>${venueInfo.tabs.luggage.title}</h3><p>地図で周辺のコインロッカーを確認できます。</p></div>` + createSearchBtns("コインロッカー クローク"),
+                cafe: `<div class="info-card"><h3>${venueInfo.tabs.timekill.title}</h3><p>地図で周辺のカフェや時間つぶしスポットを確認できます。</p></div>` + createSearchBtns("カフェ 暇つぶし"),
+                toilet: `<div class="info-card"><h3>${(venueInfo.tabs.toilet ? venueInfo.tabs.toilet.title : '🚻 トイレ情報')}</h3><p>地図で周辺のトイレを確認できます。</p></div>` + createSearchBtns("トイレ"),
+                artists: `<div class="info-card"><h3>${venueInfo.tabs.performers.title}</h3><p>地図で周辺の楽器店を確認できます。</p></div>` + createSearchBtns("楽器屋")
+            }
+        };
+    }
+
+    return converted;
+}
+
+// Generate dynamic data for unknown venues
+function createDynamicVenueData(venueName, regionName = "") {
+    const safeName = venueName.replace(/\s/g, '+');
+
+    // Reuse button creator logic
+    const createSearchBtns = (keyword) => {
+        // Simple format matches Google Maps search behavior best
+        const searchBase = regionName ? `${venueName} ${regionName}` : venueName;
+        const query = encodeURIComponent(`${searchBase} ${keyword}`);
+        const officialQuery = encodeURIComponent(`${searchBase} 公式サイト`);
+
+        // For dynamic venues, we don't have a URL, so always show search for official site
+        const officialBtn = `<a href="https://www.google.com/search?q=${officialQuery}" target="_blank" style="display:block; margin-bottom:10px; background:#444; color:#ccc; text-decoration:none; padding:10px; border-radius:8px; text-align:center; font-size:0.9rem;">🔎 公式サイトを検索</a>`;
+
+        return `
+        <div style="margin-top: 15px; border-top: 1px dashed #444; padding-top: 10px;">
+            ${officialBtn}
+            <p style="font-size:0.8rem; color:#aaa; margin:0 0 5px 0;">🔍 最新情報を検索:</p>
+            <div style="display:flex; gap:10px;">
+                <a href="https://www.google.com/search?q=${query}" target="_blank" style="flex:1; background:#333; color:white; text-decoration:none; padding:8px; border-radius:4px; text-align:center; font-size:0.8rem;">Google検索</a>
+                <a href="https://twitter.com/search?q=${query}&f=live" target="_blank" style="flex:1; background:#1da1f2; color:white; text-decoration:none; padding:8px; border-radius:4px; text-align:center; font-size:0.8rem;">X (Twitter)</a>
+            </div>
+        </div>`;
+    };
+
+    // Base query for map
+    // Prevent redundancy: if venueName already contains regionName (e.g. "Koenji Roots" contains "Koenji"), don't add it again.
+    const mapBase = (regionName && !venueName.includes(regionName)) ? `${venueName} ${regionName}` : venueName;
+
+    return {
+        name: venueName,
+        coords: null, // Lat/Lng null signals "use text query only" to updateMap
+        region: regionName || "検索結果",
+        category: "その他",
+        tabQueries: {
+            // Include region keywords if available for better accuracy
+            // Restore "周辺" (Nearby) to force "Near X" search behavior
+            // Add "ライブハウス" (Live House) context to disambiguate common names like "Roots" + "Cafe"
+            parking: `${mapBase} 周辺 駐車場`,
+            lockers: `${mapBase} 周辺 コインロッカー`,
+            cafe: `${mapBase} ライブハウス 周辺 カフェ`,
+            toilet: `${mapBase} ライブハウス 周辺 トイレ`,
+            artists: `${mapBase} 楽器屋`
+        },
+        content: {
+            parking: `<div class="info-card"><h3>🚗 駐車場</h3><p>地図で周辺の駐車場を確認できます。</p></div>` + createSearchBtns("駐車場"),
+            lockers: `<div class="info-card"><h3>🎒 コインロッカー</h3><p>地図で周辺のロッカーを確認できます。</p></div>` + createSearchBtns("コインロッカー クローク"),
+            cafe: `<div class="info-card"><h3>☕ カフェ・休憩</h3><p>地図で周辺の休憩スポットを確認できます。</p></div>` + createSearchBtns("カフェ 暇つぶし"),
+            toilet: `<div class="info-card"><h3>🚻 トイレ・攻略</h3><p>地図で周辺のトイレを確認できます。会場設備は公式サイト等で確認してください。</p></div>` + createSearchBtns("トイレ"),
+            artists: `<div class="info-card"><h3>🎸 楽器店</h3><p>地図で周辺の楽器店を確認できます。</p></div>` + createSearchBtns("楽器屋")
+        }
+    };
+}
+
+// Get all venue names for autocomplete
+function getAllVenueNames() {
+    return Object.keys(VENUES_DATABASE);
+}
+
+// Search venues by name (fuzzy search)
+function searchVenues(query) {
+    if (!query) return getAllVenueNames();
+
+    const lowerQuery = query.toLowerCase();
+    return getAllVenueNames().filter(name =>
+        name.toLowerCase().includes(lowerQuery)
+    );
+}
+
+// Get venue by exact name
+function getVenueByName(name) {
+    return VENUES_DATABASE[name] || null;
+}
+</script>
 
     <script>
         // --- Global State ---
