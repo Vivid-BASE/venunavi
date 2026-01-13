@@ -4,284 +4,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>べにゅなび - Guideboxx</title>
+    <title>Guideboxx | ライブ参戦管理</title>
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #341f97;
-            /* Navy */
-            --accent-color: #ff9f43;
-            /* Orange */
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --light-gray: #f5f5f5;
-            --border-radius: 12px;
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --primary-bg: #341f97;
+            --primary-light: #5f27cd;
+            --accent: #ff9f43;
+            --text-main: #333;
+            --text-light: #777;
+            --bg-body: #f7f7f7;
+            --white: #ffffff;
+            --radius-card: 16px;
+            --shadow-card: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
 
         body {
-            font-family: "Meiryo", "Hiragino Kaku Gothic ProN", sans-serif;
+            font-family: "M PLUS Rounded 1c", sans-serif;
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding-bottom: 80px;
-            /* Space for bottom nav */
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding-bottom: 90px;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* --- Header --- */
-        header {
-            background: var(--primary-color);
-            color: white;
-            padding: 15px;
+        .header {
+            background: var(--primary-bg);
+            color: var(--white);
+            padding: 15px 20px;
             text-align: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            font-size: 1.1rem;
+            font-weight: 700;
             position: sticky;
             top: 0;
             z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        /* --- Modes Container --- */
-        .mode-section {
-            display: none;
-            /* Hidden by default */
-            padding: 20px 15px;
+        .header .title {
+            flex-grow: 1;
+        }
+
+        .container {
             max-width: 600px;
             margin: 0 auto;
-        }
-
-        .mode-section.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(5px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* --- Mode A: Strategy (Search) Styles --- */
-        .search-container {
-            position: relative;
-            margin-bottom: 20px;
-        }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 15px;
-            font-size: 1.1rem;
-            border: 2px solid #ddd;
-            border-radius: 30px;
-            box-sizing: border-box;
-            outline: none;
-            transition: border-color 0.3s;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        input[type="text"]:focus {
-            border-color: var(--accent-color);
-        }
-
-        .search-btn {
-            position: absolute;
-            right: 5px;
-            top: 5px;
-            bottom: 5px;
-            background: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 46px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-
-        .autocomplete-items {
-            position: absolute;
-            border: 1px solid #d4d4d4;
-            border-bottom: none;
-            border-top: none;
-            z-index: 99;
-            top: 100%;
-            left: 0;
-            right: 0;
-            border-radius: 0 0 15px 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .autocomplete-items div {
-            padding: 10px;
-            cursor: pointer;
-            background-color: #fff;
-            border-bottom: 1px solid #d4d4d4;
-        }
-
-        .autocomplete-items div:hover {
-            background-color: #e9e9e9;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            padding-bottom: 10px;
-            scrollbar-width: none;
-        }
-
-        .tabs::-webkit-scrollbar {
-            display: none;
-        }
-
-        .tab {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            color: #555;
-            background: #eee;
-            white-space: nowrap;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .tab.active {
-            transform: scale(1.05);
-            color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Tab Colors */
-        .tab-parking.active {
-            background: #e74c3c;
-        }
-
-        .tab-luggage.active {
-            background: #3498db;
-        }
-
-        .tab-timekill.active {
-            background: #f1c40f;
-            color: #333;
-        }
-
-        .tab-strategy.active {
-            background: #9b59b6;
-        }
-
-        .tab-performers.active {
-            background: #2ecc71;
-        }
-
-        .content-card {
-            background: white;
-            border-radius: var(--border-radius);
             padding: 20px;
-            margin-top: 15px;
-            box-shadow: var(--shadow);
-            border: 1px solid #eee;
         }
 
-        /* --- Mode B: Stamp Book Styles --- */
-        .stamp-btn-container {
-            text-align: center;
-            margin-bottom: 30px;
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-card);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-card);
         }
 
-        .stamp-btn {
-            background: linear-gradient(135deg, #ff9f43, #ff6b6b);
-            color: white;
-            border: none;
-            padding: 20px 40px;
-            border-radius: 50px;
-            font-size: 1.3rem;
-            font-weight: bold;
-            box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
-            cursor: pointer;
-            transition: transform 0.1s;
-        }
-
-        .stamp-btn:active {
-            transform: scale(0.95);
-        }
-
-        /* Japan Map Grid */
-        .japan-map-container {
-            margin: 20px auto;
-            max-width: 350px;
-            position: relative;
-        }
-
-        .japan-grid {
-            display: grid;
-            grid-template-columns: repeat(16, 1fr);
-            grid-gap: 4px;
-        }
-
-        .pref-box {
-            background: #e0e0e0;
-            color: #555;
-            font-size: 0.6rem;
+        .section-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            border-radius: 4px;
-            cursor: pointer;
-            aspect-ratio: 1;
-            user-select: none;
-            font-weight: bold;
+            gap: 8px;
+            color: var(--primary-bg);
+            font-weight: 700;
+            border-left: 5px solid var(--accent);
+            padding-left: 10px;
+        }
+
+        .ticket-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ticket {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow-card);
+            display: flex;
+            overflow: hidden;
             position: relative;
         }
 
-        .pref-box.visited {
-            background: var(--accent-color);
+        .ticket-left {
+            background: var(--primary-bg);
             color: white;
-            box-shadow: 0 0 5px rgba(255, 159, 67, 0.6);
-        }
-
-        .pref-box:active {
-            transform: scale(0.9);
-        }
-
-        .history-list {
-            margin-top: 20px;
-        }
-
-        .history-card {
-            background: white;
             padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-width: 70px;
+            text-align: center;
+            border-right: 2px dashed rgba(255, 255, 255, 0.3);
+        }
+
+        .ticket-right {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .btn {
+            border: none;
+            outline: none;
+            cursor: pointer;
+            border-radius: 50px;
+            padding: 12px 24px;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: transform 0.1s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn-primary {
+            background: var(--primary-bg);
+            color: white;
+        }
+
+        .btn-accent {
+            background: var(--accent);
+            color: white;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
             border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border-left: 5px solid var(--primary-color);
-            animation: slideIn 0.3s ease;
+            font-size: 1rem;
+            box-sizing: border-box;
+            background: #f9f9f9;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* --- Bottom Navigation --- */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -290,49 +161,78 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
             z-index: 1000;
         }
 
         .nav-item {
             text-align: center;
-            flex: 1;
             color: #999;
+            flex: 1;
+            font-size: 0.7rem;
             cursor: pointer;
-            font-size: 0.8rem;
         }
 
-        .nav-item .icon {
-            display: block;
+        .nav-icon {
             font-size: 1.5rem;
-            margin-bottom: 2px;
+            display: block;
+            margin-bottom: 4px;
         }
 
         .nav-item.active {
-            color: var(--primary-color);
+            color: var(--primary-bg);
             font-weight: bold;
         }
 
-        /* Map Container override */
-        #mapContainer {
-            width: 100%;
-            height: 300px;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-            background: #eee;
-            margin-top: 15px;
+        .hidden {
+            display: none !important;
         }
 
-        /* Spinner */
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--accent-color);
+        .text-c {
+            text-align: center;
+        }
+
+        .japan-map-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .japan-grid {
+            display: grid;
+            grid-template-columns: repeat(16, 1fr);
+            gap: 3px;
+        }
+
+        .pref-box {
+            width: 18px;
+            height: 18px;
+            background: #ddd;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            color: #555;
+        }
+
+        .pref-box.visited {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 0 5px rgba(255, 159, 67, 0.5);
+            cursor: pointer;
+        }
+
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #ff9f43;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 16px;
+            height: 16px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 10px;
+            display: inline-block;
         }
 
         @keyframes spin {
@@ -345,1293 +245,631 @@
             }
         }
 
-        .map-placeholder {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            background: #f9f9f9;
-            color: #666;
-        }
-
-        /* Disclaimer */
-        .disclaimer {
-            font-size: 0.7rem;
-            color: #999;
-            text-align: center;
-            margin-top: 30px;
-            padding: 10px;
-            border-top: 1px solid #eee;
-        }
-
-        /* --- Desktop Optimization (Media Queries) --- */
-        .header-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .header-nav {
+        #reviewBox {
+            background: #e8f0fe;
+            border: 1px solid #b3d7ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
             display: none;
         }
 
-        /* Hidden on mobile */
-
-        .header-nav button {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            margin: 0 5px;
-            cursor: pointer;
+        .review-addr {
             font-weight: bold;
-            font-size: 0.9rem;
-            transition: all 0.2s;
+            color: #1a73e8;
+            margin: 5px 0 10px 0;
         }
 
-        .header-nav button:hover {
-            background: rgba(255, 255, 255, 0.4);
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
         }
 
-        .header-nav button.active {
+        .modal-content {
             background: white;
-            color: var(--primary-color);
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
-        @media screen and (min-width: 768px) {
-
-            /* General Layout */
-            body {
-                padding-bottom: 0;
-            }
-
-            /* No bottom nav space needed */
-
-            /* Header */
-            .header-content {
-                flex-direction: row;
-                justify-content: space-between;
-                max-width: 900px;
-                margin: 0 auto;
-                padding: 0 20px;
-            }
-
-            .header-nav {
-                display: block;
-            }
-
-            /* Hide Bottom Nav */
-            .bottom-nav {
-                display: none;
-            }
-
-            /* Content Width */
-            .mode-section {
-                max-width: 900px;
-                padding: 40px 20px;
-            }
-
-            /* History Grid for Desktop */
-            .history-list {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 15px;
-            }
-
-            .history-card {
-                margin-bottom: 0;
-            }
-
-            /* Hover Effects */
-            .tab:hover {
-                background: #ddd;
-            }
-
-            .stamp-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 8px 20px rgba(255, 107, 107, 0.5);
-            }
-
-            /* Adjust Japan Map Container */
-            .japan-map-container {
-                max-width: 500px;
-            }
+        /* Review Box Buttons */
+        .review-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            box-sizing: border-box;
+            font-size: 1rem;
         }
     </style>
 </head>
 
 <body>
-
-    <header>
-        <div class="header-content">
-            <div class="site-title">📍 べにゅなび 💮</div>
-            <nav class="header-nav">
-                <button onclick="switchMode('strategy')" id="header-nav-strategy" class="active">会場攻略</button>
-                <button onclick="switchMode('stamp')" id="header-nav-stamp">スタンプ帳</button>
-            </nav>
-        </div>
+    <header class="header">
+        <div class="title">📍 べにゅなび</div>
     </header>
 
-    <!-- MODE A: Strategy -->
-    <section id="strategy-mode" class="mode-section active">
-        <div class="search-container">
-            <input type="text" id="venueInput" placeholder="会場名を入力 (例: Zepp Haneda)">
-            <button class="search-btn" id="searchBtn">🔍</button>
-            <div id="autocomplete-list" class="autocomplete-items"></div>
+    <main id="view-home" class="container">
+
+        <div
+            style="background:#fff; padding:20px; border-radius:12px; border:1px solid #eee; margin-bottom:20px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+            <h3 style="margin-top:0; color:var(--primary-bg);">📅 次のライブ予定</h3>
+
+            <p style="font-size:0.8rem; color:#666;">
+                日付と会場名を入れるだけで、当日のスタンプ場所がセットされます。
+            </p>
+
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px;">
+                <div style="display:flex; gap:10px;">
+                    <input type="date" id="planDate" style="padding:10px; border:1px solid #ddd; border-radius:8px;">
+                    <input type="text" id="planInputArtist" placeholder="アーティスト名"
+                        style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
+                </div>
+                <input type="text" id="planVenue" placeholder="会場名"
+                    style="padding:10px; border:1px solid #ddd; border-radius:8px;">
+                <textarea id="planMemo" placeholder="メモ"
+                    style="padding:10px; border:1px solid #ddd; border-radius:8px; height:60px;"></textarea>
+            </div>
+
+            <button id="registerBtn" onclick="startSearch()"
+                style="width:100%; background:var(--primary-bg); color:white; padding:15px; border:none; border-radius:30px; font-weight:bold; cursor:pointer; box-shadow:0 4px 10px rgba(52, 31, 151, 0.3);">
+                🔍 場所を検索
+            </button>
+
+            <!-- REVIEW BOX -->
+            <div id="reviewBox">
+                <!-- Venue Name Check -->
+                <div id="reviewVenueName"
+                    style="font-size:1.0rem; font-weight:bold; color:var(--primary-bg); margin-bottom:5px; display:none;">
+                </div>
+
+                <div style="font-size:0.9rem; color:#555;">この場所が見つかりました：</div>
+                <div id="reviewAddress" class="review-addr"></div>
+
+                <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+                    <a id="reviewMapLink" href="#" target="_blank" class="review-btn"
+                        style="background:#fff; border:1px solid #d35400; color:#d35400;">
+                        🗺️ Googleマップで確認する
+                    </a>
+                    <button onclick="showManualFix()" class="review-btn" style="background:#ff9f43; color:white;">
+                        違う場所？ (手動修正)
+                    </button>
+                    <button onclick="confirmPlan()" class="review-btn"
+                        style="background:var(--primary-bg); color:white;">
+                        ✅ これで登録！
+                    </button>
+                </div>
+            </div>
+
+            <!-- MANUAL FIX AREA -->
+            <div id="fallbackArea"
+                style="display:none; background:#fff3cd; padding:15px; border-radius:8px; margin-bottom:15px; border:1px solid #ffeeba; margin-top:10px;">
+                <p style="margin:0 0 10px 0; color:#856404; font-size:1.0rem; font-weight:bold;">📍 手動で場所を登録</p>
+                <div style="background:white; padding:10px; border-radius:8px; margin-bottom:10px;">
+                    <button onclick="openGoogleSearch()"
+                        style="width:100%; background:#eee; border:none; padding:8px; border-radius:4px; font-weight:bold; cursor:pointer; margin-bottom:5px;">🔍
+                        Googleマップを開く</button>
+                    <div style="font-size:0.9rem;">正しい<strong>「住所」</strong>をコピーして、<br>この下の箱に貼り付けてください。</div>
+                </div>
+                <textarea id="fallbackInput" placeholder="住所をここにペースト"
+                    style="width:100%; padding:10px; height:60px; border:2px solid #d35400; border-radius:8px; box-sizing:border-box; background:#fff0e6; font-size:1rem;"></textarea>
+                <button id="retryBtn" onclick="retrySearch()"
+                    style="width:100%; background:#d35400; color:white; padding:12px; border:none; border-radius:30px; font-weight:bold; cursor:pointer; font-size:1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">👉
+                    これで登録する</button>
+            </div>
+
+            <div id="missionList" style="margin-top:20px;"></div>
         </div>
 
-        <div style="text-align:center; margin-bottom:15px; font-weight:bold; color:var(--primary-color); font-size:1.1rem;"
-            id="currentVenueDisplay">
-            会場を検索してください
-        </div>
-
-        <div class="tabs">
-            <button class="tab tab-parking active" onclick="switchTab('parking')">🚗 駐車場</button>
-            <button class="tab tab-luggage" onclick="switchTab('lockers')">🎒 荷物</button>
-            <button class="tab tab-timekill" onclick="switchTab('cafe')">☕ 暇つぶし</button>
-            <button class="tab tab-strategy" onclick="switchTab('toilet')">🔥 攻略/トイレ</button>
-            <button class="tab tab-performers" onclick="switchTab('artists')">🎸 楽器屋</button>
-        </div>
-
-        <div id="mapContainer">
-            <div class="map-placeholder">
-                <div style="font-size:3rem; margin-bottom:10px;">🗺️</div>
-                <div>地図が表示されます</div>
+        <!-- EDIT PLAN MODAL -->
+        <div id="editModal" class="modal-overlay">
+            <div class="modal-content">
+                <h3 style="margin-top:0; color:var(--primary-bg);">✏️ 予定を編集</h3>
+                <input type="hidden" id="editPlanId">
+                <label style="font-size:0.8rem; color:#666;">日付</label>
+                <input type="date" id="editDate" class="form-input" style="margin-bottom:10px;">
+                <label style="font-size:0.8rem; color:#666;">アーティスト</label>
+                <input type="text" id="editArtist" class="form-input" style="margin-bottom:10px;">
+                <label style="font-size:0.8rem; color:#666;">会場名 (表示用)</label>
+                <input type="text" id="editVenue" class="form-input" style="margin-bottom:10px;">
+                <label style="font-size:0.8rem; color:#666;">メモ</label>
+                <textarea id="editMemo" class="form-input" style="height:80px; margin-bottom:15px;"></textarea>
+                <div style="display:flex; justify-content:space-between; gap:10px;">
+                    <button onclick="closeEditModal()"
+                        style="background:#ccc; color:white; border:none; padding:10px; border-radius:8px; flex:1;">キャンセル</button>
+                    <button onclick="saveEditPlan()"
+                        style="background:var(--primary-bg); color:white; border:none; padding:10px; border-radius:8px; flex:1; font-weight:bold;">保存</button>
+                </div>
+                <div style="margin-top:15px; border-top:1px solid #eee; padding-top:10px;">
+                    <div style="font-size:0.8rem; color:#d35400; cursor:pointer; text-align:center; text-decoration:underline;"
+                        onclick="closeEditModal(); updatePlanLocation(currentEditId)">📍 場所(地図)だけ修正したい場合はこちら</div>
+                </div>
             </div>
         </div>
 
-        <div id="contentArea" class="content-card">
-            <p style="text-align:center; color:#888;">👆 上の検索ボックスから会場を探してください</p>
-        </div>
-
-        <div class="disclaimer">
-            ※本アプリの情報はGoogleマップ等の外部APIを利用しています。<br>
-            実際の状況（空き状況や閉店など）と異なる場合があります。<br>
-            正確な情報は現地の公式案内をご確認ください。
-        </div>
-    </section>
-
-    <!-- MODE B: Stamp -->
-    <section id="stamp-mode" class="mode-section">
-        <div class="stamp-btn-container">
-            <button class="stamp-btn" id="stampActionBtn" onclick="recordStamp()">
-                📍 今ここにいる！<br>
-                <span style="font-size:0.8rem; opacity:0.9;">(スタンプを押す)</span>
-            </button>
-        </div>
-
-        <div style="background:white; padding:15px; border-radius:12px; border:1px solid #eee;">
-            <h3 style="margin:0 0 10px 0; color:var(--primary-color); font-size:1rem; text-align:center;">🗾 日本制覇マップ
-            </h3>
-            <p style="text-align:center; font-size:0.8rem; color:#666; margin-bottom:15px;">
-                訪れた都道府県がオレンジになります。<br>タップで履歴を確認できます。</p>
-
-            <div class="japan-map-container" id="japanMapGrid">
-                <!-- Grid Map Generated by JS -->
+        <div class="card">
+            <div class="section-title">🗾 全国制覇マップ</div>
+            <p class="text-s text-c text-gray" style="font-size:0.8rem;">オレンジの都道府県をタップすると下に履歴を表示します</p>
+            <div class="japan-map-wrapper">
                 <div class="japan-grid" id="japanGridTarget"></div>
             </div>
-        </div>
+            <div style="text-align:center; margin-top:10px; font-weight:bold; color:var(--primary-bg);">
+                制覇: <span id="conquerCount" style="font-size:1.5rem; color:var(--accent);">0</span> / 47
+            </div>
 
-        <div style="margin-top:20px;">
-            <h3 style="font-size:1rem; color:#333; margin-left:5px;">📋 訪問履歴</h3>
-            <div id="historyList" class="history-list">
-                <!-- History Cards -->
+            <div id="prefHistoryArea"
+                style="margin-top:20px; display:none; border-top:1px solid #eee; padding-top:15px;">
+                <h4 id="prefHistoryTitle" style="color:var(--primary-bg); margin:0 0 10px 0;"></h4>
+                <div id="prefHistoryList"></div>
+                <button onclick="document.getElementById('prefHistoryArea').style.display='none'"
+                    style="width:100%; background:#f0f0f0; border:none; padding:8px; border-radius:8px; margin-top:10px; color:#555;">閉じる</button>
             </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Bottom Navigation -->
+    <main id="view-history" class="container hidden">
+        <div class="section-title" style="margin-bottom:20px;">🎫 参戦履歴</div>
+        <div id="historyContainer" class="ticket-list"></div>
+    </main>
+
+    <main id="view-search" class="container hidden">
+        <div class="card">
+            <div class="section-title">🔍 会場周辺・設備</div>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <input type="text" id="venueInput" class="form-input" placeholder="会場名 (例: Zepp Haneda)"
+                    onkeypress="if(event.key==='Enter') searchLegacyVenue(this.value)">
+                <button onclick="searchLegacyVenue(document.getElementById('venueInput').value)"
+                    style="background:var(--primary-bg); color:white; border:none; border-radius:8px; padding:0 20px; cursor:pointer; font-weight:bold;">🔍</button>
+            </div>
+            <div id="legacyContent" style="padding:20px;"></div>
+        </div>
+    </main>
+
     <nav class="bottom-nav">
-        <div class="nav-item active" onclick="switchMode('strategy')" id="nav-strategy">
-            <span class="icon">🔍</span>
-            会場攻略
+        <div class="nav-item active" onclick="switchTab('home')" id="nav-home"><span class="nav-icon">🏠</span>マイページ
         </div>
-        <div class="nav-item" onclick="switchMode('stamp')" id="nav-stamp">
-            <span class="icon">💮</span>
-            スタンプ帳
-        </div>
+        <div class="nav-item" onclick="switchTab('search')" id="nav-search"><span class="nav-icon">🔍</span>周辺情報</div>
+        <div class="nav-item" onclick="switchTab('history')" id="nav-history"><span class="nav-icon">🎫</span>履歴</div>
     </nav>
 
-    <!-- Load Databases (Assuming existing workflow) -->
-<script>
-// 全国イベント会場データベース
-const VENUES_DATABASE = {
-    // 滋賀県
-    "滋賀バリハリ": {
-        name: "滋賀バリハリ",
-        url: "http://ks-house7.moo.jp/",
-        region: "滋賀県",
-        category: "ライブハウス",
-        lat: 35.063672,
-        lng: 136.021259,
-        tabs: {
-            parking: { title: "🚗 駐車場情報", mapLat: 35.063672, mapLng: 136.021259 },
-            luggage: { title: "🎒 荷物・ロッカー", mapLat: 35.063672, mapLng: 136.021259 },
-            timekill: { title: "☕ 暇つぶし", mapLat: 35.063672, mapLng: 136.021259 },
-            toilet: { title: "🚻 トイレ情報", mapLat: 35.063672, mapLng: 136.021259 },
-            performers: { title: "🎸 出演者向け", mapLat: 35.063672, mapLng: 136.021259 }
-        }
-    },
-    // 東京都
-    "日本武道館": {
-        name: "日本武道館",
-        url: "https://www.nipponbudokan.or.jp/",
-        region: "東京都",
-        category: "アリーナ",
-        lat: 35.6938,
-        lng: 139.7503,
-        tabs: {
-            parking: {
-                title: "🚗 駐車場情報",
-                content: `<h3>周辺駐車場</h3>
-<p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p>
-<ul>
-<li><strong>北の丸駐車場</strong> - 徒歩5分 / 最大料金なし / 混雑しやすい</li>
-<li><strong>九段下駅周辺コインパーキング</strong> - 徒歩10分 / 最大1,500円程度</li>
-</ul>`,
-                mapLat: 35.6938,
-                mapLng: 139.7503
-            },
-            luggage: {
-                title: "🎒 荷物・ロッカー",
-                content: `<h3>コインロッカー</h3>
-<ul>
-<li><strong>九段下駅</strong> - 改札内外に多数あり</li>
-<li><strong>飯田橋駅</strong> - 大型ロッカーあり</li>
-<li>⚠️ イベント当日は早めに埋まります</li>
-</ul>`,
-                mapLat: 35.6955,
-                mapLng: 139.7527
-            },
-            timekill: {
-                title: "☕ 暇つぶし",
-                content: `<h3>待機スポット</h3>
-<ul>
-<li><strong>北の丸公園</strong> - 武道館すぐ / 自然豊か</li>
-<li><strong>神保町書店街</strong> - 徒歩15分 / カフェ多数</li>
-<li><strong>東京ドームシティ</strong> - 徒歩20分</li>
-</ul>`,
-                mapLat: 35.6920,
-                mapLng: 139.7520
-            },
-            toilet: {
-                title: "🚻 トイレ情報",
-                content: `<h3>トイレ事情</h3>
-<ul>
-<li><strong>北の丸公園</strong> - 会場周辺に公衆トイレが複数あります。</li>
-<li><strong>会場内</strong> - 女性用は非常に混雑します。九段下駅であらかじめ済ませましょう。</li>
-</ul>`,
-                mapLat: 35.6938,
-                mapLng: 139.7503
-            },
-            performers: {
-                title: "🎸 出演者向け",
-                content: `<h3>搬入・楽器店</h3>
-<ul>
-<li><strong>搬入口</strong> - 北側（要事前確認）</li>
-<li><strong>御茶ノ水楽器街</strong> - 徒歩20分 / 弦・スティック等</li>
-</ul>`,
-                mapLat: 35.6938,
-                mapLng: 139.7503
-            }
-        }
-    },
-
-    "Zepp Haneda": {
-        name: "Zepp Haneda",
-        url: "https://www.zepp.co.jp/hall/haneda/",
-        region: "東京都",
-        category: "ライブハウス",
-        lat: 35.5494,
-        lng: 139.7798,
-        tabs: {
-            parking: {
-                title: "🚗 駐車場情報",
-                content: `<h3>周辺駐車場</h3>
-<p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p>
-<ul>
-<li><strong>羽田空港第3ターミナル駐車場</strong> - 徒歩5分 / 30分毎150円</li>
-<li>⚠️ イベント時は満車の可能性あり。早めの来場を推奨</li>
-</ul>`,
-                mapLat: 35.5494,
-                mapLng: 139.7798
-            },
-            luggage: {
-                title: "🎒 荷物・ロッカー",
-                content: `<h3>コインロッカー</h3>
-<ul>
-<li><strong>羽田空港第3ターミナル</strong> - 徒歩3分 / 大型ロッカー多数</li>
-<li><strong>天空橋駅</strong> - 改札内にあり</li>
-<li>⚠️ 空港利用客も多いため、早めの確保を</li>
-</ul>`,
-                mapLat: 35.5494,
-                mapLng: 139.7798
-            },
-            timekill: {
-                title: "☕ 暇つぶし",
-                content: `<h3>待機スポット</h3>
-<ul>
-<li><strong>羽田空港第3ターミナル</strong> - 徒歩3分 / フードコート・展望デッキ</li>
-<li><strong>TIAT SKY HALL</strong> - 同じ建物内 / カフェあり</li>
-<li><strong>羽田イノベーションシティ</strong> - 徒歩10分 / 商業施設</li>
-</ul>`,
-                mapLat: 35.5494,
-                mapLng: 139.7798
-            },
-            toilet: {
-                title: "🚻 トイレ情報",
-                content: `<h3>トイレ事情</h3>
-<ul>
-<li><strong>羽田イノベーションシティ</strong> - 新しくて綺麗なトイレが多く穴場です。</li>
-<li><strong>HIcity</strong> - 会場直結ではありませんが、徒歩圏内として利用可能。</li>
-</ul>`,
-                mapLat: 35.5494,
-                mapLng: 139.7798
-            },
-            performers: {
-                title: "🎸 出演者向け",
-                content: `<h3>搬入・楽器店</h3>
-<ul>
-<li><strong>搬入口</strong> - 建物裏側（要事前確認）</li>
-<li><strong>最寄り楽器店</strong> - 蒲田・品川方面まで移動が必要</li>
-<li>⚠️ 空港近くのため、楽器は事前準備推奨</li>
-</ul>`,
-                mapLat: 35.5494,
-                mapLng: 139.7798
-            }
-        }
-    },
-
-    "横浜アリーナ": {
-        name: "横浜アリーナ",
-        region: "神奈川県",
-        category: "アリーナ",
-        lat: 35.5089,
-        lng: 139.6175,
-        tabs: {
-            parking: {
-                title: "🚗 駐車場情報",
-                content: `<h3>周辺駐車場</h3>
-<p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p>
-<ul>
-<li><strong>新横浜駅周辺コインパーキング</strong> - 徒歩5-10分 / 最大1,500-2,000円</li>
-<li><strong>新横浜プリンスホテル駐車場</strong> - 徒歩3分 / 30分毎300円</li>
-<li>⚠️ イベント時は早めに満車になります</li>
-</ul>`,
-                mapLat: 35.5089,
-                mapLng: 139.6175
-            },
-            luggage: {
-                title: "🎒 荷物・ロッカー",
-                content: `<h3>コインロッカー</h3>
-<ul>
-<li><strong>新横浜駅</strong> - 改札内外に多数 / 大型ロッカーあり</li>
-<li><strong>キュービックプラザ新横浜</strong> - 駅ビル内</li>
-<li>⚠️ 大規模イベント時は早めに埋まります</li>
-</ul>`,
-                mapLat: 35.5089,
-                mapLng: 139.6175
-            },
-            timekill: {
-                title: "☕ 暇つぶし",
-                content: `<h3>待機スポット</h3>
-<ul>
-<li><strong>キュービックプラザ新横浜</strong> - 徒歩3分 / カフェ・レストラン多数</li>
-<li><strong>新横浜ラーメン博物館</strong> - 徒歩5分</li>
-<li><strong>日産スタジアム周辺</strong> - 徒歩10分 / 公園あり</li>
-</ul>`,
-                mapLat: 35.5089,
-                mapLng: 139.6175
-            },
-            toilet: {
-                title: "🚻 トイレ情報",
-                content: `<h3>トイレ事情</h3>
-<ul>
-<li><strong>会場周辺</strong> - 横浜アリーナ周辺にはコンビニ・カフェが多いですが、イベント時は混雑・利用制限があります。</li>
-<li><strong>新横浜駅</strong> - 改札内のトイレは混みます。駅ビルの上層階が狙い目。</li>
-</ul>`,
-                mapLat: 35.5089,
-                mapLng: 139.6175
-            },
-            performers: {
-                title: "🎸 出演者向け",
-                content: `<h3>搬入・楽器店</h3>
-<ul>
-<li><strong>搬入口</strong> - 北側（要事前確認）</li>
-<li><strong>イシバシ楽器 横浜店</strong> - 横浜駅 / 電車で10分</li>
-<li><strong>島村楽器 ららぽーと横浜店</strong> - 鴨居駅 / 電車で5分</li>
-</ul>`,
-                mapLat: 35.5089,
-                mapLng: 139.6175
-            }
-        }
-    },
-
-    // 大阪府
-    "大阪城ホール": {
-        name: "大阪城ホール",
-        region: "大阪府",
-        category: "アリーナ",
-        lat: 34.6873,
-        lng: 135.5262,
-        tabs: {
-            parking: { title: "🚗 駐車場情報", content: `<h3>周辺駐車場</h3><p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p><ul><li><strong>森ノ宮駅周辺パーキング</strong> - 徒歩5-10分 / 最大1,500円程度</li></ul>`, mapLat: 34.6873, mapLng: 135.5262 },
-            luggage: { title: "🎒 荷物・ロッカー", content: `<h3>コインロッカー</h3><ul><li><strong>森ノ宮駅</strong> - 改札内外に多数</li><li><strong>大阪城公園駅</strong> - 改札内にあり</li></ul>`, mapLat: 34.6873, mapLng: 135.5262 },
-            timekill: { title: "☕ 暇つぶし", content: `<h3>待機スポット</h3><ul><li><strong>大阪城公園</strong> - すぐ / 広大な公園</li><li><strong>もりのみやキューズモール</strong> - 徒歩5分</li></ul>`, mapLat: 34.6873, mapLng: 135.5262 },
-            toilet: { title: "🚻 トイレ情報", content: `<h3>トイレ事情</h3><ul><li><strong>大阪城公園</strong> - 公園内に公衆トイレ多数。</li><li><strong>JOB-SURE</strong> - 城ホール手前のカフェ・商業エリアも利用可。</li></ul>`, mapLat: 34.6873, mapLng: 135.5262 },
-            performers: { title: "🎸 出演者向け", content: `<h3>搬入・楽器店</h3><ul><li><strong>搬入口</strong> - 要事前確認</li><li><strong>イシバシ楽器 梅田店</strong> - 梅田駅 / 電車で15分</li></ul>`, mapLat: 34.6873, mapLng: 135.5262 }
-        }
-    },
-
-    "Zepp Osaka Bayside": {
-        name: "Zepp Osaka Bayside",
-        region: "大阪府",
-        category: "ライブハウス",
-        lat: 34.6548,
-        lng: 135.4321,
-        tabs: {
-            parking: { title: "🚗 駐車場情報", content: `<h3>周辺駐車場</h3><p>⚠️ ユニバーサルシティウォーク大阪の駐車場が利用可能ですが、混雑します。</p><ul><li><strong>ユニバーサルシティウォーク駐車場</strong> - 徒歩1分 / 30分毎400円</li></ul>`, mapLat: 34.6548, mapLng: 135.4321 },
-            luggage: { title: "🎒 荷物・ロッカー", content: `<h3>コインロッカー</h3><ul><li><strong>ユニバーサルシティ駅</strong> - 改札内外に多数</li><li><strong>ユニバーサルシティウォーク</strong> - 施設内</li></ul>`, mapLat: 34.6548, mapLng: 135.4321 },
-            timekill: { title: "☕ 暇つぶし", content: `<h3>待機スポット</h3><ul><li><strong>ユニバーサルシティウォーク大阪</strong> - すぐ / カフェ・レストラン多数</li><li><strong>USJ周辺</strong> - 徒歩5分</li></ul>`, mapLat: 34.6548, mapLng: 135.4321 },
-            toilet: { title: "🚻 トイレ情報", content: `<h3>トイレ事情</h3><ul><li><strong>ユニバーサルシティウォーク</strong> - 会場に隣接しており、トイレも多数ありますが、一般客で混みます。</li><li><strong>桜島駅</strong> - 少し歩きますが空いています。</li></ul>`, mapLat: 34.6548, mapLng: 135.4321 },
-            performers: { title: "🎸 出演者向け", content: `<h3>搬入・楽器店</h3><ul><li><strong>搬入口</strong> - 施設裏側</li><li><strong>最寄り楽器店</strong> - 梅田・難波方面まで移動が必要</li></ul>`, mapLat: 34.6548, mapLng: 135.4321 }
-        }
-    },
-
-    "さいたまスーパーアリーナ": {
-        name: "さいたまスーパーアリーナ",
-        region: "埼玉県",
-        category: "アリーナ",
-        lat: 35.8946,
-        lng: 139.6309,
-        tabs: {
-            parking: { title: "🚗 駐車場情報", content: `<h3>周辺駐車場</h3><p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p><ul><li><strong>さいたま新都心駅周辺パーキング</strong> - 徒歩5-10分 / 最大1,500-2,000円</li></ul>`, mapLat: 35.8946, mapLng: 139.6309 },
-            luggage: { title: "🎒 荷物・ロッカー", content: `<h3>コインロッカー</h3><ul><li><strong>さいたま新都心駅</strong> - 改札内外に多数</li><li><strong>コクーンシティ</strong> - 商業施設内</li></ul>`, mapLat: 35.8946, mapLng: 139.6309 },
-            timekill: { title: "☕ 暇つぶし", content: `<h3>待機スポット</h3><ul><li><strong>コクーンシティ</strong> - 徒歩3分 / 大型商業施設</li><li><strong>けやきひろば</strong> - すぐ / 屋外広場</li></ul>`, mapLat: 35.8946, mapLng: 139.6309 },
-            toilet: { title: "🚻 トイレ情報", content: `<h3>トイレ事情</h3><ul><li><strong>けやきひろば</strong> - 地下と1階にトイレがあります。</li><li><strong>コクーンシティ</strong> - 非常に広いため、トイレには困りませんが、移動に時間がかかります。</li></ul>`, mapLat: 35.8946, mapLng: 139.6309 },
-            performers: { title: "🎸 出演者向け", content: `<h3>搬入・楽器店</h3><ul><li><strong>搬入口</strong> - 要事前確認</li><li><strong>島村楽器 大宮店</strong> - 大宮駅 / 電車で5分</li></ul>`, mapLat: 35.8946, mapLng: 139.6309 }
-        }
-    },
-
-    "Zepp Shinjuku": {
-        name: "Zepp Shinjuku",
-        region: "東京都",
-        category: "ライブハウス",
-        lat: 35.6938,
-        lng: 139.7005,
-        tabs: {
-            parking: { title: "🚗 駐車場情報", content: `<h3>周辺駐車場</h3><p>⚠️ <strong>ご注意:</strong> 一般来場者用の駐車場がない、または非常に少ない場合があります。公式情報をご確認ください。</p><ul><li><strong>新宿駅周辺パーキング</strong> - 徒歩5-10分 / 30分毎400-600円</li></ul>`, mapLat: 35.6938, mapLng: 139.7005 },
-            luggage: { title: "🎒 荷物・ロッカー", content: `<h3>コインロッカー</h3><ul><li><strong>新宿駅</strong> - 改札内外に多数</li><li><strong>新宿三丁目駅</strong> - 改札内にあり</li></ul>`, mapLat: 35.6938, mapLng: 139.7005 },
-            timekill: { title: "☕ 暇つぶし", content: `<h3>待機スポット</h3><ul><li><strong>新宿駅周辺</strong> - カフェ・レストラン無数</li><li><strong>新宿御苑</strong> - 徒歩10分 / 公園</li></ul>`, mapLat: 35.6938, mapLng: 139.7005 },
-            toilet: { title: "🚻 トイレ情報", content: `<h3>トイレ事情</h3><ul><li><strong>歌舞伎町タワー</strong> - 2階のスタバ横などにトイレがありますが、一般客・観光客で激混みです。</li><li><strong>西武新宿駅</strong> - 地下のPePeなどが利用しやすいです。</li></ul>`, mapLat: 35.6938, mapLng: 139.7005 },
-            performers: { title: "🎸 出演者向け", content: `<h3>搬入・楽器店</h3><ul><li><strong>搬入口</strong> - 要事前確認</li><li><strong>御茶ノ水楽器街</strong> - 電車で15分</li></ul>`, mapLat: 35.6938, mapLng: 139.7005 }
-        }
-    },
-
-    "Zepp DiverCity": {
-        name: "Zepp DiverCity",
-        region: "東京都",
-        category: "ライブハウス",
-        lat: 35.6254,
-        lng: 139.7756,
-        tabs: {
-            parking: { title: "🚗 駐車場情報", content: `<h3>周辺駐車場</h3><ul><li><strong>ダイバーシティ東京駐車場</strong> - 徒歩1分 / 30分毎500円</li><li><strong>お台場周辺パーキング</strong> - 徒歩5-10分</li></ul>`, mapLat: 35.6254, mapLng: 139.7756 },
-            luggage: { title: "🎒 荷物・ロッカー", content: `<h3>コインロッカー</h3><ul><li><strong>ダイバーシティ東京</strong> - 施設内に多数</li><li><strong>台場駅</strong> - 改札内にあり</li></ul>`, mapLat: 35.6254, mapLng: 139.7756 },
-            timekill: { title: "☕ 暇つぶし", content: `<h3>待機スポット</h3><ul><li><strong>ダイバーシティ東京</strong> - すぐ / 大型商業施設</li><li><strong>お台場海浜公園</strong> - 徒歩5分</li></ul>`, mapLat: 35.6254, mapLng: 139.7756 },
-            toilet: { title: "🚻 トイレ情報", content: `<h3>トイレ事情</h3><ul><li><strong>ダイバーシティ東京</strong> - 各階にトイレがあり非常に便利です。</li><li><strong>フードコート</strong> - 広いので比較的回転が早いです。</li></ul>`, mapLat: 35.6254, mapLng: 139.7756 },
-            performers: { title: "🎸 出演者向け", content: `<h3>搬入・楽器店</h3><ul><li><strong>搬入口</strong> - 施設裏側</li><li><strong>最寄り楽器店</strong> - 品川・新橋方面まで移動が必要</li></ul>`, mapLat: 35.6254, mapLng: 139.7756 }
-        }
-    },
-    // --- Manual Fixes for Search Ambiguity ---
-    "ワイルドサイド東京": {
-        name: "ワイルドサイド東京",
-        url: "https://ws-tokyo.com/",
-        region: "新宿",
-        category: "ライブハウス",
-        lat: 35.69129,
-        lng: 139.710895,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    // 東京都 (New Rename)
-    "カナデビアホール": {
-        name: "カナデビアホール",
-        url: "https://www.tokyo-dome.co.jp/hall/",
-        region: "東京都",
-        category: "ホール",
-        lat: 35.7030,
-        lng: 139.7548,
-        tabs: {
-            parking: { title: "🚗 駐車場情報", content: "" },
-            luggage: { title: "🎒 荷物・ロッカー", content: "" },
-            timekill: { title: "☕ 暇つぶし", content: "" },
-            toilet: { title: "🚻 トイレ情報", content: "" },
-            performers: { title: "🎸 出演者向け", content: "" }
-        }
-    },
-    "Spotify O-EAST": {
-        name: "Spotify O-EAST",
-        url: "https://shibuya-o.com/east/",
-        region: "東京都",
-        category: "ライブハウス",
-        lat: 35.659359,
-        lng: 139.700027,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "LIQUIDROOM": {
-        name: "LIQUIDROOM",
-        url: "https://www.liquidroom.net/",
-        region: "東京都",
-        category: "ライブハウス",
-        lat: 35.6473,
-        lng: 139.7126,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "新宿LOFT": {
-        name: "新宿LOFT",
-        url: "https://www.loft-prj.co.jp/LOFT/",
-        region: "東京都",
-        category: "ライブハウス",
-        lat: 35.69533,
-        lng: 139.70264,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "下北沢SHELTER": {
-        name: "下北沢SHELTER",
-        url: "https://www.loft-prj.co.jp/SHELTER/",
-        region: "東京都",
-        category: "ライブハウス",
-        lat: 35.659868,
-        lng: 139.667292,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    // --- Zepp Chain ---
-    "Zepp Sapporo": {
-        name: "Zepp Sapporo",
-        url: "https://www.zepp.co.jp/hall/sapporo/",
-        region: "北海道",
-        category: "ライブハウス",
-        lat: 43.0493,
-        lng: 141.3532,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "Zepp Nagoya": {
-        name: "Zepp Nagoya",
-        url: "https://www.zepp.co.jp/hall/nagoya/",
-        region: "愛知県",
-        category: "ライブハウス",
-        lat: 35.16327,
-        lng: 136.87979,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "Zepp Namba": {
-        name: "Zepp Namba",
-        url: "https://www.zepp.co.jp/hall/namba/",
-        region: "大阪府",
-        category: "ライブハウス",
-        lat: 34.657423,
-        lng: 135.501253,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "Zepp Osaka Bayside": {
-        name: "Zepp Osaka Bayside",
-        url: "https://www.zepp.co.jp/hall/osakabayside/",
-        region: "大阪府",
-        category: "ライブハウス",
-        lat: 34.662008,
-        lng: 135.434812,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "Zepp DiverCity": {
-        name: "Zepp DiverCity",
-        url: "https://www.zepp.co.jp/hall/divercity/",
-        region: "東京都",
-        category: "ライブハウス",
-        lat: 35.625167,
-        lng: 139.775361,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "Zepp Haneda": {
-        name: "Zepp Haneda",
-        url: "https://www.zepp.co.jp/hall/haneda/",
-        region: "東京都",
-        category: "ライブハウス",
-        lat: 35.5457,
-        lng: 139.7423,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "KT Zepp Yokohama": {
-        name: "KT Zepp Yokohama",
-        url: "https://www.zepp.co.jp/hall/yokohama/",
-        region: "神奈川県",
-        category: "ライブハウス",
-        lat: 35.4566,
-        lng: 139.6335,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "Zepp Fukuoka": {
-        name: "Zepp Fukuoka",
-        url: "https://www.zepp.co.jp/hall/fukuoka/",
-        region: "福岡県",
-        category: "ライブハウス",
-        lat: 33.590096,
-        lng: 130.401675,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "Zepp Shinjuku": {
-        name: "Zepp Shinjuku",
-        url: "https://www.zepp.co.jp/hall/shinjuku/",
-        region: "東京都",
-        category: "ライブハウス",
-        lat: 35.695438,
-        lng: 139.700595,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    // --- Major Domes & Arenas ---
-    "東京ドーム": {
-        name: "東京ドーム",
-        url: "https://www.tokyo-dome.co.jp/dome/",
-        region: "東京都",
-        category: "ドーム",
-        lat: 35.705677,
-        lng: 139.751389,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "京セラドーム大阪": {
-        name: "京セラドーム大阪",
-        url: "https://www.kyoceradome-osaka.jp/",
-        region: "大阪府",
-        category: "ドーム",
-        lat: 34.669228,
-        lng: 135.475601,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "バンテリンドーム ナゴヤ": {
-        name: "バンテリンドーム ナゴヤ",
-        url: "https://www.nagoya-dome.co.jp/",
-        region: "愛知県",
-        category: "ドーム",
-        lat: 35.1873,
-        lng: 136.9489,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "PayPayドーム": {
-        name: "PayPayドーム",
-        url: "https://www.softbankhawks.co.jp/stadium/",
-        region: "福岡県",
-        category: "ドーム",
-        lat: 33.5947,
-        lng: 130.3639,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "札幌ドーム": {
-        name: "札幌ドーム",
-        url: "https://www.sapporo-dome.co.jp/",
-        region: "北海道",
-        category: "ドーム",
-        lat: 43.0152,
-        lng: 141.4116,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "さいたまスーパーアリーナ": {
-        name: "さいたまスーパーアリーナ",
-        url: "https://www.saitama-arena.co.jp/",
-        region: "埼玉県",
-        category: "アリーナ",
-        lat: 35.894920,
-        lng: 139.630814,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "横浜アリーナ": {
-        name: "横浜アリーナ",
-        url: "https://www.yokohama-arena.co.jp/",
-        region: "神奈川県",
-        category: "アリーナ",
-        lat: 35.512389,
-        lng: 139.620056,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "ぴあアリーナMM": {
-        name: "ぴあアリーナMM",
-        url: "https://pia-arena-mm.jp/",
-        region: "神奈川県",
-        category: "アリーナ",
-        lat: 35.4578,
-        lng: 139.6378,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "Kアリーナ横浜": {
-        name: "Kアリーナ横浜",
-        url: "https://k-arena.com/",
-        region: "神奈川県",
-        category: "アリーナ",
-        lat: 35.4638,
-        lng: 139.6332,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    },
-    "国立代々木競技場": {
-        name: "国立代々木競技場",
-        url: "https://www.jpnsport.go.jp/yoyogi/",
-        region: "東京都",
-        category: "アリーナ",
-        lat: 35.6669,
-        lng: 139.7005,
-        tabs: { parking: { content: "" }, luggage: { content: "" }, timekill: { content: "" }, toilet: { content: "" }, performers: { content: "" } }
-    }
-};
-</script>
-<script>
-// Helper function to convert old venueData format to new VENUES_DATABASE format
-function convertVenueData() {
-    const converted = {};
-
-    for (const [venueName, venueInfo] of Object.entries(VENUES_DATABASE)) {
-        // Safe name for query (replace spaces with +)
-        const safeName = venueName.replace(/\s/g, '+');
-
-        // Helper to create buttons
-        const createSearchBtns = (keyword) => {
-            const query = encodeURIComponent(`${venueName} ${keyword}`);
-            let officialBtn = "";
-            if (venueInfo.url) {
-                officialBtn = `<a href="${venueInfo.url}" target="_blank" style="display:block; margin-bottom:10px; background: linear-gradient(90deg, #00e5ff, #e040fb); color:white; text-decoration:none; padding:10px; border-radius:8px; text-align:center; font-weight:bold; font-size:0.9rem;">🏠 ${venueName} 公式サイト</a>`;
-            } else {
-                const officialQuery = encodeURIComponent(`${venueName} 公式サイト`);
-                officialBtn = `<a href="https://www.google.com/search?q=${officialQuery}" target="_blank" style="display:block; margin-bottom:10px; background:#444; color:#ccc; text-decoration:none; padding:10px; border-radius:8px; text-align:center; font-size:0.9rem;">🔎 公式サイトを検索</a>`;
-            }
-
-            return `
-            <div style="margin-top: 15px; border-top: 1px dashed #444; padding-top: 10px;">
-                ${officialBtn}
-                <p style="font-size:0.8rem; color:#aaa; margin:0 0 5px 0;">🔍 最新情報を検索:</p>
-                <div style="display:flex; gap:10px;">
-                    <a href="https://www.google.com/search?q=${query}" target="_blank" style="flex:1; background:#333; color:white; text-decoration:none; padding:8px; border-radius:4px; text-align:center; font-size:0.8rem;">Google検索</a>
-                    <a href="https://twitter.com/search?q=${query}&f=live" target="_blank" style="flex:1; background:#1da1f2; color:white; text-decoration:none; padding:8px; border-radius:4px; text-align:center; font-size:0.8rem;">X (Twitter)</a>
-                </div>
-            </div>`;
-        };
-
-        // Construct Robust Queries
-        const lat = venueInfo.lat || (venueInfo.coords ? venueInfo.coords.lat : null);
-        const lng = venueInfo.lng || (venueInfo.coords ? venueInfo.coords.lng : null);
-
-        // Strategy: Use "VenueName Region" to guide the search
-        // This is robust for the Embed API which struggles with raw coordinates in search mode.
-        const region = venueInfo.region || "";
-        const param = region ? `${venueName} ${region}` : venueName;
-
-        converted[venueName] = {
-            coords: { lat: lat, lng: lng },
-            region: venueInfo.region,
-            category: venueInfo.category,
-            name: venueInfo.name,
-            tabQueries: {
-                parking: `駐車場 ${param}`,
-                lockers: `コインロッカー ${param}`,
-                cafe: `カフェ ${param}`,
-                toilet: `トイレ ${param}`,
-                artists: `楽器屋 ${param}`
-            },
-            content: {
-                parking: `<div class="info-card"><h3>${venueInfo.tabs.parking.title}</h3><p>地図で周辺の駐車場を確認できます。</p></div>` + createSearchBtns("駐車場"),
-                lockers: `<div class="info-card"><h3>${venueInfo.tabs.luggage.title}</h3><p>地図で周辺のコインロッカーを確認できます。</p></div>` + createSearchBtns("コインロッカー クローク"),
-                cafe: `<div class="info-card"><h3>${venueInfo.tabs.timekill.title}</h3><p>地図で周辺のカフェや時間つぶしスポットを確認できます。</p></div>` + createSearchBtns("カフェ 暇つぶし"),
-                toilet: `<div class="info-card"><h3>${(venueInfo.tabs.toilet ? venueInfo.tabs.toilet.title : '🚻 トイレ情報')}</h3><p>地図で周辺のトイレを確認できます。</p></div>` + createSearchBtns("トイレ"),
-                artists: `<div class="info-card"><h3>${venueInfo.tabs.performers.title}</h3><p>地図で周辺の楽器店を確認できます。</p></div>` + createSearchBtns("楽器屋")
-            }
-        };
-    }
-
-    return converted;
-}
-
-// Generate dynamic data for unknown venues
-function createDynamicVenueData(venueName, regionName = "") {
-    const safeName = venueName.replace(/\s/g, '+');
-
-    // Reuse button creator logic
-    const createSearchBtns = (keyword) => {
-        // Simple format matches Google Maps search behavior best
-        const searchBase = regionName ? `${venueName} ${regionName}` : venueName;
-        const query = encodeURIComponent(`${searchBase} ${keyword}`);
-        const officialQuery = encodeURIComponent(`${searchBase} 公式サイト`);
-
-        // For dynamic venues, we don't have a URL, so always show search for official site
-        const officialBtn = `<a href="https://www.google.com/search?q=${officialQuery}" target="_blank" style="display:block; margin-bottom:10px; background:#444; color:#ccc; text-decoration:none; padding:10px; border-radius:8px; text-align:center; font-size:0.9rem;">🔎 公式サイトを検索</a>`;
-
-        return `
-        <div style="margin-top: 15px; border-top: 1px dashed #444; padding-top: 10px;">
-            ${officialBtn}
-            <p style="font-size:0.8rem; color:#aaa; margin:0 0 5px 0;">🔍 最新情報を検索:</p>
-            <div style="display:flex; gap:10px;">
-                <a href="https://www.google.com/search?q=${query}" target="_blank" style="flex:1; background:#333; color:white; text-decoration:none; padding:8px; border-radius:4px; text-align:center; font-size:0.8rem;">Google検索</a>
-                <a href="https://twitter.com/search?q=${query}&f=live" target="_blank" style="flex:1; background:#1da1f2; color:white; text-decoration:none; padding:8px; border-radius:4px; text-align:center; font-size:0.8rem;">X (Twitter)</a>
-            </div>
-        </div>`;
-    };
-
-    // Base query for map
-    // Prevent redundancy: if venueName already contains regionName (e.g. "Koenji Roots" contains "Koenji"), don't add it again.
-    const mapBase = (regionName && !venueName.includes(regionName)) ? `${venueName} ${regionName}` : venueName;
-
-    return {
-        name: venueName,
-        coords: null, // Lat/Lng null signals "use text query only" to updateMap
-        region: regionName || "検索結果",
-        category: "その他",
-        tabQueries: {
-            // Include region keywords if available for better accuracy
-            // Restore "周辺" (Nearby) to force "Near X" search behavior
-            // Add "ライブハウス" (Live House) context to disambiguate common names like "Roots" + "Cafe"
-            parking: `${mapBase} 周辺 駐車場`,
-            lockers: `${mapBase} 周辺 コインロッカー`,
-            cafe: `${mapBase} ライブハウス 周辺 カフェ`,
-            toilet: `${mapBase} ライブハウス 周辺 トイレ`,
-            artists: `${mapBase} 楽器屋`
-        },
-        content: {
-            parking: `<div class="info-card"><h3>🚗 駐車場</h3><p>地図で周辺の駐車場を確認できます。</p></div>` + createSearchBtns("駐車場"),
-            lockers: `<div class="info-card"><h3>🎒 コインロッカー</h3><p>地図で周辺のロッカーを確認できます。</p></div>` + createSearchBtns("コインロッカー クローク"),
-            cafe: `<div class="info-card"><h3>☕ カフェ・休憩</h3><p>地図で周辺の休憩スポットを確認できます。</p></div>` + createSearchBtns("カフェ 暇つぶし"),
-            toilet: `<div class="info-card"><h3>🚻 トイレ・攻略</h3><p>地図で周辺のトイレを確認できます。会場設備は公式サイト等で確認してください。</p></div>` + createSearchBtns("トイレ"),
-            artists: `<div class="info-card"><h3>🎸 楽器店</h3><p>地図で周辺の楽器店を確認できます。</p></div>` + createSearchBtns("楽器屋")
-        }
-    };
-}
-
-// Get all venue names for autocomplete
-function getAllVenueNames() {
-    return Object.keys(VENUES_DATABASE);
-}
-
-// Search venues by name (fuzzy search)
-function searchVenues(query) {
-    if (!query) return getAllVenueNames();
-
-    const lowerQuery = query.toLowerCase();
-    return getAllVenueNames().filter(name =>
-        name.toLowerCase().includes(lowerQuery)
-    );
-}
-
-// Get venue by exact name
-function getVenueByName(name) {
-    return VENUES_DATABASE[name] || null;
-}
-</script>
+    <script src="venues_database.js"></script>
+    <script>if (typeof VENUES_DATABASE === 'undefined') { var VENUES_DATABASE = { "Zepp Haneda": { name: "Zepp Haneda", Lat: 35.5457, Lng: 139.7423, tabs: { luggage: { title: "L", content: "" } } } } }</script>
 
     <script>
-        // --- Global State ---
-        let currentMode = 'strategy';
-        let currentTab = 'parking';
-        let currentProcessVenue = "";
-        let allVenueData = {}; // Will load from DB + Dynamic
+        const PLAN_KEY = 'guideboxx_plans';
+        let pendingLocation = null;
+        let currentEditId = null;
 
-        // --- Initialization ---
-        document.addEventListener("DOMContentLoaded", () => {
-            // Load defined venues
-            if (typeof VENUES_DATABASE !== 'undefined') {
-                // Convert old DB format to internal format if needed, or straight copy
-                // Based on venue_helpers.js logic:
-                if (typeof convertVenueData === 'function') {
-                    const converted = convertVenueData();
-                    Object.assign(allVenueData, converted);
-                } else {
-                    // Fallback
-                    allVenueData = VENUES_DATABASE;
-                }
-            }
+        async function startSearch() {
+            const dateVal = document.getElementById('planDate').value;
+            const venueVal = document.getElementById('planVenue').value;
+            if (!dateVal || !venueVal) { alert("日付と会場名を入力してください"); return; }
 
-            // Setup Autocomplete
-            setupAutocomplete();
+            const btn = document.getElementById('registerBtn');
+            const originalText = btn.innerText;
+            btn.disabled = true; btn.innerHTML = '<span class="loader"></span> 検索中...';
 
-            // Setup Search Input Listener
-            document.getElementById("searchBtn").addEventListener("click", () => {
-                const val = document.getElementById("venueInput").value.trim();
-                if (val) searchVenue(val);
-            });
-            document.getElementById("venueInput").addEventListener("keypress", (e) => {
-                if (e.key === 'Enter') {
-                    const val = document.getElementById("venueInput").value.trim();
-                    if (val) searchVenue(val);
-                }
-            });
+            document.getElementById('reviewBox').style.display = 'none';
+            document.getElementById('fallbackArea').style.display = 'none';
 
-            // Initialize Map Grid
-            renderJapanMap();
-            loadStampHistory();
+            let loc = await robustSearch(venueVal);
 
-            // Default Search (Zepp Haneda)
-            searchVenue("Zepp Haneda");
-        });
+            btn.disabled = false; btn.innerText = originalText;
 
-        // --- Mode Switching ---
-        function switchMode(mode) {
-            currentMode = mode;
-
-            // Update Nav Styles
-            document.getElementById('nav-strategy').classList.toggle('active', mode === 'strategy');
-            document.getElementById('nav-stamp').classList.toggle('active', mode === 'stamp');
-
-            // Desktop Header Nav
-            if (document.getElementById('header-nav-strategy')) {
-                document.getElementById('header-nav-strategy').classList.toggle('active', mode === 'strategy');
-                document.getElementById('header-nav-stamp').classList.toggle('active', mode === 'stamp');
-            }
-
-            // Toggle Sections
-            document.getElementById('strategy-mode').classList.toggle('active', mode === 'strategy');
-            document.getElementById('stamp-mode').classList.toggle('active', mode === 'stamp');
-
-            if (mode === 'stamp') {
-                renderJapanMap(); // Refresh map
-                loadStampHistory();
-            }
-            window.scrollTo(0, 0);
-        }
-
-        // --- Logic: Strategy Mode ---
-        function switchTab(tabName) {
-            currentTab = tabName;
-
-            // Update UI
-            document.querySelectorAll('.tab').forEach(btn => btn.classList.remove('active'));
-            // Map tabName to class
-            const map = {
-                'parking': 'tab-parking', 'lockers': 'tab-luggage', 'cafe': 'tab-timekill',
-                'toilet': 'tab-strategy', 'artists': 'tab-performers'
-            };
-            document.querySelector(`.${map[tabName]}`).classList.add('active');
-
-            renderContent();
-            updateMap();
-        }
-
-        function searchVenue(inputName) {
-            let target = inputName;
-
-            // 1. Alias Check
-            const aliases = {
-                "東京ドームシティホール": "カナデビアホール",
-                "Tokyo Dome City Hall": "カナデビアホール",
-                "TDCホール": "カナデビアホール",
-                "バリバリ": "滋賀バリハリ",
-                "バリハリ": "滋賀バリハリ",
-                "BARI-HARI": "滋賀バリハリ",
-                "barihari": "滋賀バリハリ",
-                "bari-hari": "滋賀バリハリ",
-                "Kanadevia Hall": "カナデビアホール"
-            };
-            if (aliases[target]) target = aliases[target];
-
-            // 2. Exact/Reference Check
-            let venueData = allVenueData[target];
-
-            if (!venueData) {
-                // Try fuzzy find in allVenueData keys
-                const fuzzy = Object.keys(allVenueData).find(k => k.includes(target));
-                if (fuzzy) {
-                    target = fuzzy;
-                    venueData = allVenueData[target];
-                }
-            }
-
-            if (venueData) {
-                currentProcessVenue = target;
-                if (target !== inputName) document.getElementById("venueInput").value = target;
+            if (loc) {
+                showReview(loc);
             } else {
-                // Dynamic Creation
-                currentProcessVenue = inputName;
-                if (typeof createDynamicVenueData === 'function') {
-                    // Quick dynamic extraction
-                    const region = ""; // Helper handles it smarter now
-                    allVenueData[inputName] = createDynamicVenueData(inputName, region);
-                }
+                showManualFix();
             }
-
-            document.getElementById("currentVenueDisplay").innerText = `📍 ${currentProcessVenue}`;
-            renderContent();
-            updateMap();
         }
 
-        function renderContent() {
-            if (!currentProcessVenue) return;
-            const info = allVenueData[currentProcessVenue];
-            if (!info) return;
+        function showReview(loc) {
+            pendingLocation = loc;
+            document.getElementById('reviewBox').style.display = 'block';
+            document.getElementById('reviewAddress').innerText = loc.addressLabel || loc.region;
+            document.getElementById('reviewMapLink').href = `https://www.google.com/maps/search/?api=1&query=${loc.lat},${loc.lon}`;
 
-            const contentDiv = document.getElementById("contentArea");
-            contentDiv.innerHTML = info.content[currentTab] || "情報がありません";
+            const nameEl = document.getElementById('reviewVenueName');
+            if (loc.officialName) {
+                nameEl.innerHTML = `修正候補: <strong>${loc.officialName}</strong><br><span style="font-size:0.8rem; font-weight:normal; color:#666;">※登録時にこの名前に自動修正されます</span>`;
+                nameEl.style.display = 'block';
+            } else {
+                nameEl.style.display = 'none';
+            }
         }
 
-        function updateMap(showVenueOnly = false) {
-            if (!currentProcessVenue) return;
-            const info = allVenueData[currentProcessVenue];
+        function confirmPlan() {
+            if (!pendingLocation) return;
+            const dateVal = document.getElementById('planDate').value;
+            let venueVal = document.getElementById('planVenue').value;
+            const artistVal = document.getElementById('planInputArtist').value;
+            const memoVal = document.getElementById('planMemo').value;
 
-            const container = document.getElementById("mapContainer");
-            let query = showVenueOnly ? info.name : (info.tabQueries[currentTab] || info.name);
-
-            // LatLng force logic
-            let extra = "";
-            if (info.coords && info.coords.lat) {
-                if (showVenueOnly) query = `${info.coords.lat},${info.coords.lng}`;
-                extra = `&center=${info.coords.lat},${info.coords.lng}&sll=${info.coords.lat},${info.coords.lng}`;
+            if (pendingLocation.officialName) {
+                venueVal = pendingLocation.officialName;
             }
 
-            container.innerHTML = `
-                <div style="position: relative; width: 100%; height: 100%;">
-                    <div class="map-placeholder" style="position: absolute; inset: 0; z-index: 2;">
-                        <div class="spinner"></div>
-                        &nbsp;地図を読み込み中...
-                    </div>
-                
-                <iframe src="https://maps.google.com/maps?q=${encodeURIComponent(query)}${extra}&z=15&output=embed" 
-                style="width:100%; height:100%; border:0; opacity:0; transition:opacity 0.5s;"
-                allowfullscreen="" 
-                onload="this.style.opacity='1'; this.parentNode.querySelector('.map-placeholder').style.display='none';"></iframe>
-                </div>
-            `;
-
-            // Add External Link Button underneath (Universal Fallback)
-            const extLink = info.coords && info.coords.lat
-                ? `${info.coords.lat},${info.coords.lng}`
-                : encodeURIComponent(query);
-
-            container.innerHTML += `
-            <div style="text-align:right; margin-top:5px; display:flex; justify-content:flex-end; gap:8px;">
-                <a href="https://www.google.com/maps/search/?api=1&query=${extLink}" target="_blank" style="background:#fff; color:#333; border:1px solid #ccc; padding:5px 10px; border-radius:4px; text-decoration:none; font-size:0.8rem; display:flex; align-items:center; gap:4px;">
-                    <span style="color:#EA4335;">📍</span> Googleマップで会場を開く
-                </a>
-               <button onclick="updateMap(true)" style="background:#ff4081; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.8rem; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">
-                    🎯 中心に戻す
-                </button>
-               ${showVenueOnly ? `<button onclick="updateMap(false)" style="background:#555; color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; font-size:0.8rem;">🔙 検索結果に戻る</button>` : ''}
-            </div>`;
+            finalizePlan(dateVal, venueVal, artistVal, memoVal, pendingLocation.lat, pendingLocation.lon, pendingLocation.region, pendingLocation.isRough);
+            document.getElementById('reviewBox').style.display = 'none';
+            document.getElementById('planVenue').value = "";
+            document.getElementById('planInputArtist').value = "";
+            document.getElementById('planMemo').value = "";
+            pendingLocation = null;
         }
 
-        // --- Auto Complete Helper ---
-        function setupAutocomplete() {
-            const inp = document.getElementById("venueInput");
-            const list = document.getElementById("autocomplete-list");
+        function showManualFix() { const venueVal = document.getElementById('planVenue').value; if (venueVal) window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(venueVal)}`, '_blank'); document.getElementById('reviewBox').style.display = 'none'; document.getElementById('fallbackArea').style.display = 'block'; }
 
-            inp.addEventListener("input", function () {
-                const val = this.value;
-                list.innerHTML = "";
-                if (!val) return;
+        async function retrySearch() {
+            const rawText = document.getElementById('fallbackInput').value;
+            const dateVal = document.getElementById('planDate').value;
+            const venueVal = document.getElementById('planVenue').value;
+            const artistVal = document.getElementById('planInputArtist').value;
+            const memoVal = document.getElementById('planMemo').value;
 
-                Object.keys(allVenueData).forEach(name => {
-                    if (name.toLowerCase().includes(val.toLowerCase())) {
-                        const div = document.createElement("div");
-                        div.innerText = name;
-                        div.onclick = () => {
-                            inp.value = name;
-                            list.innerHTML = "";
-                            searchVenue(name);
-                        };
-                        list.appendChild(div);
-                    }
-                });
-            });
+            if (!rawText) { alert("テキストを入力してください"); return; }
 
-            // Close list when clicking elsewhere
-            document.addEventListener("click", function (e) {
-                if (e.target !== inp) {
-                    list.innerHTML = "";
-                }
-            });
+            const btn = document.getElementById('retryBtn');
+            btn.disabled = true; btn.innerHTML = '<span class="loader"></span> 解析中...';
+
+            const cleanQuery = cleanAddressText(rawText);
+            let loc = await robustSearch(cleanQuery);
+
+            btn.disabled = false; btn.innerText = "👉 これで登録する";
+
+            if (loc) {
+                finalizePlan(dateVal, venueVal, artistVal, memoVal, loc.lat, loc.lon, loc.region, loc.isRough);
+                document.getElementById('fallbackArea').style.display = 'none';
+                document.getElementById('fallbackInput').value = "";
+                document.getElementById('planVenue').value = "";
+                document.getElementById('planInputArtist').value = "";
+                document.getElementById('planMemo').value = "";
+            } else {
+                alert("場所を特定できませんでした。\n都道府県名を含めた住所を確認してください。");
+            }
         }
 
-        // --- Logic: Stamp Mode ---
-        const STAMP_KEY = 'guideboxx_stamps';
-
-        function recordStamp() {
-            // Get current processing venue as the location
-            // Use 'currentProcessVenue' from Strategy Mode if available
-            if (!currentProcessVenue) {
-                alert("まずは「会場攻略」で会場を検索してください！");
-                switchMode('strategy');
-                return;
-            }
-
-            const venue = currentProcessVenue;
-            let region = "その他";
-
-            // Try to find region info
-            if (allVenueData[venue] && allVenueData[venue].region) {
-                region = allVenueData[venue].region;
-            }
-
-            // Normalize for map coloring (Must match Pref names)
-            const prefList = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城", "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山", "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重", "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根", "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡", "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄"];
-
-            let mapRegion = region;
-            const foundPref = prefList.find(p => region.includes(p));
-            if (foundPref) mapRegion = foundPref;
-            else {
-                if (region.includes("新宿") || region.includes("渋谷") || region.includes("池袋") || venue.includes("Tokyo") || venue.includes("東京")) mapRegion = "東京";
-                if (region.includes("横浜") || venue.includes("Yokohama")) mapRegion = "神奈川";
-                if (region.includes("大阪") || venue.includes("Osaka")) mapRegion = "大阪";
-            }
-
-            // Check for duplicate (Same venue, Same day)
-            // Use consistent formatting options for comparison
-            const dateOpts = { year: 'numeric', month: '2-digit', day: '2-digit' };
-            const now = new Date();
-            const todayStr = now.toLocaleDateString('ja-JP', dateOpts); // e.g. "2024/01/01" or "2024/1/1" depending on engine, but consistent within same session
-
-            const history = getHistory();
-
-            const isDuplicate = history.some(item => {
-                // item.date is full string "YYYY/MM/DD HH:MM"
-                // Extract just the date part (first 10 chars usually, but splitting by space is safer if format varies)
-                // Actually, let's just check if it StartsWith the todayStr.
-                // But wait, if formats differ? 
-                // Let's rely on standard JS date parsing from the saved string? No, strings vary.
-                // Best bet: The saved string was created with the SAME logic below.
-                const itemDatePart = item.date.split(' ')[0];
-                return item.venue === venue && itemDatePart === todayStr;
-            });
-
-            if (isDuplicate) {
-                alert(`今日は既に「${venue}」のスタンプを押しています！\n1日1回までです。`);
-                return;
-            }
-
-            const stamp = {
-                venue: venue,
-                region: mapRegion,
-                displayRegion: region,
-                // Save full date with same locale options
-                date: now.toLocaleString('ja-JP', { ...dateOpts, hour: '2-digit', minute: '2-digit' })
+        function findBestVenueMatch(input) {
+            if (typeof VENUES_DATABASE === 'undefined') return null;
+            const normalize = (str) => {
+                return str.toLowerCase()
+                    .replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0))
+                    .replace(/[\s　]/g, '');
             };
-
-            history.unshift(stamp);
-            localStorage.setItem(STAMP_KEY, JSON.stringify(history));
-
-            alert(`💮 スタンプ完了！\n📍 ${venue} (${mapRegion})\n\n日本制覇マップを更新しました！`);
-            renderJapanMap(); // Update map colors
-            loadStampHistory(); // Update list
+            const target = normalize(input);
+            const aliases = { "東京ドームシティホール": "カナデビアホール", "TDC": "カナデビアホール", "バリハリ": "滋賀バリハリ", "zepphaneda": "Zepp Haneda", "zeppshinjuku": "Zepp Shinjuku", "横アリ": "横浜アリーナ", "たまアリ": "さいたまスーパーアリーナ" };
+            if (aliases[target]) return VENUES_DATABASE[aliases[target]];
+            const keys = Object.keys(VENUES_DATABASE);
+            for (const key of keys) { if (normalize(key) === target) return VENUES_DATABASE[key]; }
+            if (target.length > 3) { for (const key of keys) { if (normalize(key).includes(target)) return VENUES_DATABASE[key]; } }
+            return null;
         }
 
-        function getHistory() {
-            const data = localStorage.getItem(STAMP_KEY);
-            return data ? JSON.parse(data) : [];
+        async function robustSearch(query) {
+            const coordMatch = query.match(/([0-9.]+)\s*,\s*([0-9.]+)/);
+            if (coordMatch) { const lat = parseFloat(coordMatch[1]); const lng = parseFloat(coordMatch[2]); if (!isNaN(lat) && !isNaN(lng)) return { lat: lat, lon: lng, region: "座標指定", addressLabel: `指定座標: ${lat}, ${lng}`, isRough: false }; }
+            const dbObj = findBestVenueMatch(query);
+            if (dbObj) { return { lat: dbObj.lat, lon: dbObj.lng, region: dbObj.region, addressLabel: `${dbObj.region} (データベース登録済み)`, officialName: dbObj.name, isRough: false }; }
+            const searchPromise = new Promise(async (resolve) => { const p1 = searchAPI_Photon(query); const p2 = searchAPI_Nominatim(query); const res = await Promise.any([p1.then(r => r ? r : Promise.reject()), p2.then(r => r ? r : Promise.reject())]).catch(() => null); resolve(res); });
+            const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 5000));
+            let res = await Promise.race([searchPromise, timeoutPromise]);
+            if (res) return res;
+            let subQuery = query; let loopCount = 0;
+            while (subQuery.length > 5 && /\d$/.test(subQuery) && loopCount < 3) { subQuery = subQuery.replace(/[-\d]+$/, ''); if (subQuery === query) break; const fbRes = await searchAPI_Nominatim(subQuery); if (fbRes) return { ...fbRes, isRough: true }; query = subQuery; loopCount++; }
+            return null;
         }
 
-        function loadStampHistory(filterRegion = null) {
-            const list = document.getElementById("historyList");
+        async function searchAPI_Nominatim(q) {
+            try { const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&addressdetails=1&countrycodes=jp&limit=1`; const r = await fetch(url); const d = await r.json(); if (d && d.length > 0) { const addr = d[0].address; const region = addr.province || addr.state || "その他"; let label = region; if (addr.city) label += addr.city; if (addr.town) label += addr.town; let detectedName = null; if (d[0].name) detectedName = d[0].name; return { lat: parseFloat(d[0].lat), lon: parseFloat(d[0].lon), region: region, addressLabel: label, officialName: detectedName }; } } catch (e) { return null; } return null;
+        }
+
+        async function searchAPI_Photon(q) {
+            try { const url = `https://photon.komoot.io/api/?q=${encodeURIComponent(q)}&limit=1`; const r = await fetch(url); const d = await r.json(); if (d && d.features && d.features.length > 0) { const f = d.features[0]; const props = f.properties; const region = props.state || props.city || "その他"; let label = region; if (props.city && region !== props.city) label += props.city; return { lat: f.geometry.coordinates[1], lon: f.geometry.coordinates[0], region: region, addressLabel: label, officialName: props.name }; } } catch (e) { return null; } return null;
+        }
+
+        function finalizePlan(date, venue, artist, memo, lat, lng, region, isRough) {
+            const newPlan = { id: Date.now(), date: date, venue: venue, artist: artist || "", memo: memo || "", region: region, lat: lat, lng: lng, isRough: isRough || false, completed: false };
+            const plans = JSON.parse(localStorage.getItem(PLAN_KEY) || "[]");
+            plans.push(newPlan);
+            plans.sort((a, b) => new Date(a.date) - new Date(b.date));
+            localStorage.setItem(PLAN_KEY, JSON.stringify(plans));
+            renderMissions();
+            alert(`登録しました！\n（${region}）\n※位置が少しずれている可能性があります。移動時は改めて検索推奨`);
+        }
+
+        function renderMissions() {
+            const list = document.getElementById('missionList'); if (!list) return;
+            const plans = JSON.parse(localStorage.getItem(PLAN_KEY) || "[]");
             list.innerHTML = "";
+            const today = new Date().toISOString().split('T')[0];
 
-            let data = getHistory();
-            if (filterRegion) {
-                data = data.filter(s => s.region.includes(filterRegion));
-            }
-
-            if (data.length === 0) {
-                list.innerHTML = `<div style="text-align:center; color:#999; padding:20px;">履歴がありません</div>`;
+            if (plans.filter(p => !p.completed).length === 0) {
+                list.innerHTML = `<div style="text-align:center; color:#999; font-size:0.9rem;">予定がありません</div>`;
                 return;
             }
 
-            data.forEach(item => {
+            plans.forEach(plan => {
+                if (plan.completed) return;
+                const isToday = (plan.date <= today);
+                let btnHtml = isToday ? `<button onclick="checkIn(${plan.id})" style="background:#ff4757; color:white; border:none; padding:8px 15px; border-radius:20px; font-weight:bold; cursor:pointer;">🎁 スタンプGET</button>` : `<button disabled style="background:#ccc; color:white; border:none; padding:8px 15px; border-radius:20px; font-size:0.8rem;">当日まで待機</button>`;
+
+                const mapLink = `<a href="https://www.google.com/maps/search/?api=1&query=${plan.lat},${plan.lng}" target="_blank" style="font-size:0.8rem; color:var(--primary-bg); text-decoration:underline; display:inline-block; margin-right:10px;">📍地図で確認</a>`;
+                const editAction = `<span onclick="openEditModal(${plan.id})" style="font-size:0.8rem; cursor:pointer; color:#777; text-decoration:underline; margin-right:10px;">✏️ 編集</span>`;
+                const deleteAction = `<span onclick="deletePlan(${plan.id})" style="font-size:0.8rem; cursor:pointer; color:#999; text-decoration:underline;">🗑️削除</span>`;
+
+                let artistHtml = plan.artist ? `<div style="font-weight:bold; color:#444;">🎤 ${plan.artist}</div>` : '';
+                let memoHtml = plan.memo ? `<div style="font-size:0.8rem; color:#666; background:#eee; padding:5px; border-radius:4px; margin-top:5px;">📝 ${plan.memo}</div>` : '';
+
                 list.innerHTML += `
-                <div class="history-card">
-                    <div style="font-weight:bold; font-size:1.1rem; color:var(--primary-color);">${item.venue}</div>
-                    <div style="font-size:0.8rem; color:#666;">
-                        <span style="font-size:1rem;">💮</span>
-                        <span>${item.date}</span>
-                        <span style="margin-left:10px; background:#f0f0f0; padding:2px 8px; border-radius:10px; font-weight:bold;">${item.displayRegion}</span>
+                <div style="background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border-left:4px solid ${isToday ? '#ff4757' : '#ccc'};">
+                    <div style="flex:1;">
+                        <div style="font-size:0.8rem; color:#666;">${plan.date}</div>
+                        ${artistHtml}
+                        <div style="font-weight:bold; font-size:1.1rem; color:var(--primary-bg);">${plan.venue}</div>
+                        ${memoHtml}
+                        <div style="margin-top:6px;">${mapLink}${editAction}${deleteAction}</div>
+                    </div>
+                    <div style="margin-left:10px;">${btnHtml}</div>
+                </div>`;
+            });
+        }
+
+        function openEditModal(id) {
+            const plans = JSON.parse(localStorage.getItem(PLAN_KEY) || "[]");
+            const target = plans.find(p => p.id === id);
+            if (!target) return;
+            currentEditId = id;
+            document.getElementById('editPlanId').value = id;
+            document.getElementById('editDate').value = target.date;
+            document.getElementById('editArtist').value = target.artist || "";
+            document.getElementById('editVenue').value = target.venue;
+            document.getElementById('editMemo').value = target.memo || "";
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        function closeEditModal() { document.getElementById('editModal').style.display = 'none'; currentEditId = null; }
+
+        function saveEditPlan() {
+            const id = parseInt(document.getElementById('editPlanId').value);
+            const newDate = document.getElementById('editDate').value;
+            const newArtist = document.getElementById('editArtist').value;
+            const newVenue = document.getElementById('editVenue').value;
+            const newMemo = document.getElementById('editMemo').value;
+            if (!newDate || !newVenue) { alert("日付と会場名は必須です"); return; }
+            let plans = JSON.parse(localStorage.getItem(PLAN_KEY) || "[]");
+            let target = plans.find(p => p.id === id);
+            if (target) {
+                target.date = newDate; target.artist = newArtist; target.venue = newVenue; target.memo = newMemo;
+                plans.sort((a, b) => new Date(a.date) - new Date(b.date));
+                localStorage.setItem(PLAN_KEY, JSON.stringify(plans));
+                renderMissions(); closeEditModal(); alert("変更を保存しました！");
+            }
+        }
+
+        function cleanAddressText(text) { var s = text.replace(/[０-９]/g, function (s) { return String.fromCharCode(s.charCodeAt(0) - 0xFEE0); }); if (s.match(/[\d.]+,[\d.]+/)) return s; const prefs = ["北海道", "青森", "岩手", "宮城", "秋田", "山形", "福島", "茨城", "栃木", "群馬", "埼玉", "千葉", "東京", "神奈川", "新潟", "富山", "石川", "福井", "山梨", "長野", "岐阜", "静岡", "愛知", "三重", "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山", "鳥取", "島根", "岡山", "広島", "山口", "徳島", "香川", "愛媛", "高知", "福岡", "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島", "沖縄"]; for (let p of prefs) { const idx = s.indexOf(p); if (idx !== -1) { let line = s.substring(idx).split('\n')[0].trim(); const match = line.match(/(.+?\d+[-\d]*)/); if (match) return match[1]; return line; } } return s.trim(); }
+        function openGoogleSearch() { const v = document.getElementById('planVenue').value; window.open(`https://www.google.com/search?q=${encodeURIComponent(v + " 住所")}`, '_blank'); }
+        function deletePlan(id) { if (!confirm("この予定を削除しますか？")) return; let plans = JSON.parse(localStorage.getItem(PLAN_KEY) || "[]"); plans = plans.filter(p => p.id !== id); localStorage.setItem(PLAN_KEY, JSON.stringify(plans)); renderMissions(); }
+        async function updatePlanLocation(id) { const raw = prompt("【場所の修正】\n正しい「住所」または「数字(35.xx, 139.xx)」を貼り付けてください。"); if (!raw) return; const cleanQuery = cleanAddressText(raw); alert("検索中..."); let loc = await robustSearch(cleanQuery); if (loc) { let plans = JSON.parse(localStorage.getItem(PLAN_KEY) || "[]"); let target = plans.find(p => p.id === id); if (target) { target.lat = loc.lat; target.lng = loc.lon; target.region = loc.region; target.isRough = loc.isRough || false; localStorage.setItem(PLAN_KEY, JSON.stringify(plans)); alert(`修正完了！\n新しい場所：${loc.region}`); renderMissions(); } } else { alert("指定された住所が見つかりませんでした..."); } }
+        function checkIn(planId) { const plans = JSON.parse(localStorage.getItem(PLAN_KEY) || "[]"); const plan = plans.find(p => p.id === planId); if (!plan) return; if (!navigator.geolocation) { alert("GPS利用不可"); return; } navigator.geolocation.getCurrentPosition((pos) => { const d = getDistance(pos.coords.latitude, pos.coords.longitude, plan.lat, plan.lng); const threshold = plan.isRough ? 3.0 : 1.0; if (d <= threshold) completeMission(plan); else alert(`❌ 会場から遠すぎます（あと約${d.toFixed(1)}km）\n※判定範囲: ${threshold}km以内`); }, () => alert("GPS取得失敗")); }
+
+        function completeMission(plan) {
+            const stamp = { venue: plan.venue, artist: plan.artist || "", memo: plan.memo || "", region: plan.region, displayRegion: plan.region, date: new Date().toLocaleString('ja-JP') };
+            const history = JSON.parse(localStorage.getItem('guideboxx_stamps') || "[]"); history.unshift(stamp); localStorage.setItem('guideboxx_stamps', JSON.stringify(history));
+            const plans = JSON.parse(localStorage.getItem(PLAN_KEY) || "[]"); const target = plans.find(p => p.id === plan.id); if (target) target.completed = true; localStorage.setItem(PLAN_KEY, JSON.stringify(plans));
+            alert("🎉 スタンプゲット！"); renderMissions(); renderJapanMap(); loadStampHistory();
+        }
+
+        function getDistance(lat1, lng1, lat2, lng2) { const R = 6371; const dLat = (lat2 - lat1) * (Math.PI / 180); const dLng = (lng2 - lng1) * (Math.PI / 180); const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) * Math.sin(dLng / 2) * Math.sin(dLng / 2); return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))); }
+
+        const japanGridData = [["北海道", 1, 14, 3, 2], ["青森", 3, 13, 1, 1], ["秋田", 4, 12, 1, 1], ["岩手", 4, 13, 1, 1], ["山形", 5, 12, 1, 1], ["宮城", 5, 13, 1, 1], ["福島", 6, 13, 1, 1], ["群馬", 7, 12, 1, 1], ["栃木", 7, 13, 1, 1], ["茨城", 8, 14, 1, 1], ["埼玉", 8, 12, 1, 1], ["東京", 9, 12, 1, 1], ["千葉", 9, 13, 1, 1], ["神奈川", 9, 11, 1, 1], ["新潟", 6, 11, 1, 1], ["富山", 6, 10, 1, 1], ["長野", 7, 11, 1, 1], ["山梨", 8, 11, 1, 1], ["石川", 5, 9, 1, 1], ["福井", 6, 9, 1, 1], ["岐阜", 7, 10, 1, 1], ["静岡", 9, 10, 1, 1], ["愛知", 8, 9, 1, 1], ["滋賀", 7, 9, 1, 1], ["三重", 9, 9, 1, 1], ["京都", 7, 8, 1, 1], ["奈良", 8, 8, 1, 1], ["和歌山", 9, 8, 1, 1], ["大阪", 8, 7, 1, 1], ["兵庫", 7, 7, 1, 1], ["鳥取", 7, 6, 1, 1], ["岡山", 8, 6, 1, 1], ["島根", 7, 5, 1, 1], ["広島", 8, 5, 1, 1], ["山口", 8, 4, 1, 1], ["香川", 9, 6, 1, 1], ["徳島", 10, 7, 1, 1], ["愛媛", 10, 5, 1, 1], ["高知", 11, 6, 1, 1], ["福岡", 8, 3, 1, 1], ["大分", 9, 3, 1, 1], ["佐賀", 9, 2, 1, 1], ["長崎", 9, 1, 1, 1], ["熊本", 10, 2, 1, 1], ["宮崎", 11, 3, 1, 1], ["鹿児島", 11, 2, 1, 1], ["沖縄", 13, 1, 1, 1]];
+
+        function renderJapanMap() {
+            const container = document.getElementById("japanGridTarget"); if (!container) return;
+            container.innerHTML = "";
+            const history = JSON.parse(localStorage.getItem('guideboxx_stamps') || "[]");
+            const conquered = new Set(history.map(h => { const reg = h.displayRegion || h.prefecture || h.region || ""; return reg.replace(/[都府県]/g, ''); }));
+
+            japanGridData.forEach(item => {
+                const [name, r, c, w, h] = item;
+                const cell = document.createElement("div");
+                cell.className = "pref-box";
+                cell.innerText = name[0];
+                cell.style.gridRow = `${r} / span ${h}`;
+                cell.style.gridColumn = `${c} / span ${w}`;
+                if (conquered.has(name)) {
+                    cell.classList.add("visited");
+                    cell.onclick = () => showPrefHistory(name);
+                }
+                container.appendChild(cell);
+            });
+            const el = document.getElementById('conquerCount'); if (el) el.innerText = conquered.size;
+        }
+
+        // --- PREFECTURE HISTORY (INLINE) ---
+        function showPrefHistory(prefName) {
+            const history = JSON.parse(localStorage.getItem('guideboxx_stamps') || "[]");
+            const targets = history.filter(h => {
+                const reg = h.displayRegion || h.prefecture || h.region || "";
+                return reg.includes(prefName);
+            });
+
+            const area = document.getElementById("prefHistoryArea");
+            const titleEl = document.getElementById("prefHistoryTitle");
+            const listEl = document.getElementById("prefHistoryList");
+
+            titleEl.innerText = `${prefName}のスタンプ (${targets.length})`;
+            listEl.innerHTML = "";
+
+            targets.forEach(t => {
+                let memoHtml = t.memo ? `<div style="font-size:0.8rem; color:#666; background:#fff; padding:5px; border-radius:4px; margin-top:5px;">📝 ${t.memo}</div>` : '';
+                let html = `
+                <div style="background:#fffcf5; padding:12px; border-radius:8px; margin-bottom:10px; border-left:4px solid var(--accent); box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:5px;">
+                         <div style="font-size:0.8rem; color:#888;">${t.date.split(' ')[0]}</div>
+                         <div style="font-size:0.8rem; font-weight:bold; color:var(--primary-bg);">${t.venue}</div>
+                    </div>
+                    ${t.artist ? `<div style="font-weight:bold; color:#444; margin-bottom:5px;">🎤 ${t.artist}</div>` : ""}
+                    ${memoHtml}
+                </div>`;
+                listEl.innerHTML += html;
+            });
+            area.style.display = "block";
+        }
+
+        function loadStampHistory() {
+            const history = JSON.parse(localStorage.getItem('guideboxx_stamps') || "[]");
+            const container = document.getElementById('historyContainer');
+            if (!container) return;
+            container.innerHTML = '';
+
+            if (history.length === 0) {
+                container.innerHTML = '<div class="text-c text-gray">まだ履歴がありません</div>';
+                return;
+            }
+
+            history.forEach(item => {
+                const venue = item.venue;
+                const date = item.date.split(' ')[0]; // Show date only
+                const reg = item.displayRegion || item.region;
+
+                let memoHtml = item.memo ? `<div style="font-size:0.8rem; color:#666; background:#f9f9f9; padding:5px; border-radius:4px; margin-top:5px; border:1px solid #eee;">📝 ${item.memo}</div>` : '';
+                let artistHtml = item.artist ? `<div style="font-weight:bold; color:#555; font-size:0.9rem; margin-top:2px;">🎤 ${item.artist}</div>` : '';
+
+                container.innerHTML += `
+                <div class="ticket">
+                    <div class="ticket-left"><div>済</div></div>
+                    <div class="ticket-right">
+                        <div style="font-size:0.8rem; color:#888;">${date}</div>
+                        <div class="ticket-artist" style="color:var(--primary-bg); font-size:1.1rem;">${venue}</div>
+                        <div style="font-size:0.8rem; color:#777; margin-bottom:4px;">📍 ${reg}</div>
+                        ${artistHtml}
+                        ${memoHtml}
                     </div>
                 </div>`;
             });
         }
 
-        // --- Japan Map Grid Logic ---
-        // Refined Grid Layout (1-based coords)
-        // Format: [Name, Row, Col, w, h] 
-        // 16 Cols wide grid.
-        const japanGridData = [
-            // Hokkaido (Top Right - shift left a bit)
-            ["北海道", 1, 14, 3, 2],
+        function switchTab(tab) { document.querySelectorAll('main').forEach(el => el.classList.add('hidden')); document.getElementById(`view-${tab}`).classList.remove('hidden'); document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); document.getElementById(`nav-${tab}`).classList.add('active'); if (tab === 'home') { renderMissions(); renderJapanMap(); } if (tab === 'history') loadStampHistory(); window.scrollTo(0, 0); }
 
-            // Tohoku (Below Hokkaido)
-            ["青森", 3, 13, 1, 1],
-            ["秋田", 4, 12, 1, 1], ["岩手", 4, 13, 1, 1],
-            ["山形", 5, 12, 1, 1], ["宮城", 5, 13, 1, 1],
-            ["福島", 6, 13, 1, 1],
+        // --- LEGACY SEARCH (Surrounding Info) ---
+        function searchLegacyVenue(keyword) {
+            if (!keyword) return;
+            // No strict dependency on database anymore
+            let target = keyword;
 
-            // Kanto (Below Tohoku, Right Side)
-            ["群馬", 7, 12, 1, 1], ["栃木", 7, 13, 1, 1], ["茨城", 8, 14, 1, 1],
-            ["埼玉", 8, 12, 1, 1], ["東京", 9, 12, 1, 1], ["千葉", 9, 13, 1, 1], ["神奈川", 9, 11, 1, 1],
-
-            // Chubu / Hokuriku (Left of Kanto)
-            ["新潟", 6, 11, 1, 1],
-            ["富山", 6, 10, 1, 1], ["長野", 7, 11, 1, 1], ["山梨", 8, 11, 1, 1],
-            ["石川", 5, 9, 1, 1], ["福井", 6, 9, 1, 1], ["岐阜", 7, 10, 1, 1], ["静岡", 9, 10, 1, 1], ["愛知", 8, 9, 1, 1],
-
-            // Kansai (Left of Chubu)
-            ["滋賀", 7, 9, 1, 1], ["三重", 9, 9, 1, 1],
-            ["京都", 7, 8, 1, 1], ["奈良", 8, 8, 1, 1], ["和歌山", 9, 8, 1, 1],
-            ["大阪", 8, 7, 1, 1], ["兵庫", 7, 7, 1, 1],
-
-            // Chugoku (Left of Kansai)
-            ["鳥取", 7, 6, 1, 1], ["岡山", 8, 6, 1, 1],
-            ["島根", 7, 5, 1, 1], ["広島", 8, 5, 1, 1],
-            ["山口", 8, 4, 1, 1],
-
-            // Shikoku (Below Chugoku)
-            ["香川", 9, 6, 1, 1], ["徳島", 10, 7, 1, 1],
-            ["愛媛", 10, 5, 1, 1], ["高知", 11, 6, 1, 1],
-
-            // Kyushu (Far Left)
-            // Shift Kyushu left to avoid overlap
-            ["福岡", 8, 3, 1, 1], ["大分", 9, 3, 1, 1],
-            ["佐賀", 9, 2, 1, 1],
-            ["長崎", 9, 1, 1, 1], ["熊本", 10, 2, 1, 1], ["宮崎", 11, 3, 1, 1],
-            ["鹿児島", 11, 2, 1, 1],
-
-            // Okinawa (Bottom Left Corner)
-            ["沖縄", 13, 1, 1, 1]
-        ];
-
-        function renderJapanMap() {
-            const container = document.getElementById("japanGridTarget");
-            container.innerHTML = "";
-            const history = getHistory();
-
-            // Create loop
-            for (const item of japanGridData) {
-                const name = item[0];
-                const r = item[1];
-                const c = item[2];
-                const w = item[3] || 1;
-                const h = item[4] || 1;
-
-                const cell = document.createElement("div");
-                cell.className = "pref-box";
-                cell.innerText = name[0]; // First char
-                cell.title = name;
-                cell.style.gridRow = `${r} / span ${h}`;
-                cell.style.gridColumn = `${c} / span ${w}`;
-
-                // Check visited
-                const isVisited = history.some(h => {
-                    return h.region.includes(name);
-                });
-
-                if (isVisited) {
-                    cell.classList.add("visited");
+            // Try to find in database if it exists (for alias handling)
+            let venueData = null;
+            if (typeof VENUES_DATABASE !== 'undefined') {
+                const normalize = (str) => str.toLowerCase().replace(/[Ａ-Ｚａ-ｚ０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0)).replace(/[\s　]/g, '');
+                const safeTarget = normalize(target);
+                const keys = Object.keys(VENUES_DATABASE);
+                for (const k of keys) {
+                    if (normalize(k).includes(safeTarget)) { venueData = VENUES_DATABASE[k]; break; }
                 }
-
-                cell.onclick = () => {
-                    if (isVisited) loadStampHistory(name);
-                    else alert(`${name}はまだ訪れていません！`);
-                };
-
-                container.appendChild(cell);
+                if (!venueData && VENUES_DATABASE[target]) venueData = VENUES_DATABASE[target];
             }
+
+            // If not found, create a dummy object using the input keyword
+            if (!venueData) {
+                venueData = {
+                    name: target,
+                    tabs: {} // Empty tabs, but renderLegacyTabs now handles this by defaulting keys
+                };
+            }
+
+            const container = document.getElementById("legacyContent");
+            // Always render content now
+            container.innerHTML = `<div style="padding:15px;"><h3 style="color:var(--primary-bg); margin-top:0;">${venueData.name}</h3><div id="legacyTabContainer" style="display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px;"></div><div id="legacyTabContent" style="background:#f9f9f9; padding:15px; border-radius:8px;"></div></div>`;
+            renderLegacyTabs(venueData);
         }
+
+        function renderLegacyTabs(data) {
+            // Even if data.tabs is empty, we force the standard 5 keys
+            const tabContainer = document.getElementById("legacyTabContainer");
+            const tabContent = document.getElementById("legacyTabContent");
+            if (!tabContainer || !tabContent) return;
+
+            // Keys are fixed now to ensure buttons always appear
+            const keys = ["parking", "luggage", "timekill", "toilet", "performers"];
+
+            // Updated Meta to match Database Keys (timekill, performers)
+            const tabMeta = {
+                parking: { icon: "🅿️", label: "駐車場", color: "#3498db" },
+                luggage: { icon: "🛅", label: "ロッカー", color: "#e67e22" },
+                timekill: { icon: "☕", label: "カフェ", color: "#2ecc71" },
+                toilet: { icon: "🚻", label: "トイレ", color: "#9b59b6" },
+                performers: { icon: "🎸", label: "楽器屋", color: "#e74c3c" }
+            };
+
+            keys.forEach((key, index) => {
+                const meta = tabMeta[key];
+                const btn = document.createElement("button");
+                btn.style.cssText = `border:1px solid ${meta.color}; color:${meta.color}; background:white; padding:5px 10px; border-radius:20px; cursor:pointer; font-size:0.8rem;`;
+                btn.innerHTML = `${meta.icon} ${meta.label}`;
+                // Pass empty object if tab data missing
+                const tabData = (data.tabs && data.tabs[key]) ? data.tabs[key] : {};
+                btn.onclick = () => switchLegacyTab(key, tabData, meta.color, data.name, meta.label);
+                tabContainer.appendChild(btn);
+
+                if (index === 0) btn.click();
+            });
+        }
+
+        function switchLegacyTab(key, contentObj, color, venueName, label) {
+            const contentEl = document.getElementById("legacyTabContent");
+            if (!contentEl) return;
+
+            // Fallback for venueName
+            let safeVenueName = venueName;
+            if (!safeVenueName) {
+                const inputVal = document.getElementById('venueInput').value;
+                if (inputVal) safeVenueName = inputVal;
+                else {
+                    const header = document.querySelector("#legacyContent h3");
+                    if (header) safeVenueName = header.innerText;
+                }
+            }
+
+            // Update Border Color
+            contentEl.style.borderLeft = `4px solid ${color}`;
+
+            // Standardized Message (Ignore DB content)
+            const html = "最新の情報をGoogleマップで確認できます。<br>下のボタンを押して検索してください。";
+
+            // Google Maps Search Query
+            const searchQuery = `${safeVenueName} 周辺 ${label}`;
+            const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(searchQuery)}`;
+
+            contentEl.innerHTML = `
+                <h4 style="margin-top:0; color:${color};">${label}情報</h4>
+                <div style="font-size:0.9rem; line-height:1.6; margin-bottom:15px; color:#555;">${html}</div>
+                <div style="text-align:center;">
+                    <a href="${mapUrl}" target="_blank" style="display:block; width:100%; box-sizing:border-box; background:${color}; color:white; padding:12px; border-radius:8px; text-decoration:none; font-weight:bold; box-shadow:0 2px 5px rgba(0,0,0,0.2);">
+                        🗺️ Googleマップで「${label}」を検索
+                    </a>
+                </div>
+            `;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => { renderMissions(); renderJapanMap(); loadStampHistory(); });
     </script>
 </body>
 
