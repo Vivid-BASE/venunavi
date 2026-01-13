@@ -320,13 +320,23 @@
 
             <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px;">
                 <div style="display:flex; gap:10px;">
-                    <input type="date" id="planDate" style="padding:10px; border:1px solid #ddd; border-radius:8px;">
-                    <input type="text" id="planInputArtist" placeholder="アーティスト名"
-                        style="flex:1; padding:10px; border:1px solid #ddd; border-radius:8px;">
+                    <div style="flex:1;">
+                        <label style="font-size:0.8rem; color:#666; display:block; margin-bottom:4px;">📅 日付</label>
+                        <input type="date" id="planDate"
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box; -webkit-appearance: none; background:white;">
+                    </div>
+                    <div style="flex:2;">
+                        <label style="font-size:0.8rem; color:#666; display:block; margin-bottom:4px;">🎤 アーティスト</label>
+                        <input type="text" id="planInputArtist" placeholder="アーティスト名"
+                            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;">
+                    </div>
                 </div>
-                <input type="text" id="planVenue" placeholder="会場名"
-                    style="padding:10px; border:1px solid #ddd; border-radius:8px;">
-                <textarea id="planMemo" placeholder="メモ"
+                <div>
+                    <label style="font-size:0.8rem; color:#666; display:block; margin-bottom:4px;">🏟️ 会場名</label>
+                    <input type="text" id="planVenue" placeholder="会場名 (例: Zepp Haneda)"
+                        style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;">
+                </div>
+                <textarea id="planMemo" placeholder="メモ (備考/整理番号など)"
                     style="padding:10px; border:1px solid #ddd; border-radius:8px; height:60px;"></textarea>
             </div>
 
@@ -337,26 +347,24 @@
 
             <!-- REVIEW BOX -->
             <div id="reviewBox">
-                <!-- Venue Name Check -->
-                <div id="reviewVenueName"
-                    style="font-size:1.0rem; font-weight:bold; color:var(--primary-bg); margin-bottom:5px; display:none;">
+                <!-- Removed "Correction Candidate" (official name) as requested -->
+                <div style="font-size:0.9rem; color:#333; font-weight:bold; margin-bottom:5px;">📍 こちらの場所でよろしいですか？</div>
+                <div id="reviewAddress" class="review-addr" style="font-weight:normal; margin-bottom:15px; color:#555;">
                 </div>
 
-                <div style="font-size:0.9rem; color:#555;">この場所が見つかりました：</div>
-                <div id="reviewAddress" class="review-addr"></div>
-
                 <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
-                    <a id="reviewMapLink" href="#" target="_blank" class="review-btn"
-                        style="background:#fff; border:1px solid #d35400; color:#d35400;">
-                        🗺️ Googleマップで確認する
-                    </a>
-                    <button onclick="showManualFix()" class="review-btn" style="background:#ff9f43; color:white;">
-                        違う場所？ (手動修正)
-                    </button>
                     <button onclick="confirmPlan()" class="review-btn"
                         style="background:var(--primary-bg); color:white;">
-                        ✅ これで登録！
+                        はい、登録します
                     </button>
+                    <button onclick="showManualFix()" class="review-btn"
+                        style="background:#f1f2f6; color:#555; border:1px solid #ddd;">
+                        いいえ、修正します (手動入力)
+                    </button>
+                    <a id="reviewMapLink" href="#" target="_blank" class="review-btn"
+                        style="background:#fff; border:none; color:#1a73e8; font-size:0.9rem; margin-top:5px; text-decoration:underline;">
+                        🗺️ Googleマップで位置を確認
+                    </a>
                 </div>
             </div>
 
