@@ -321,22 +321,22 @@
             <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px;">
                 <div style="display:flex; gap:10px;">
                     <div style="flex:1;">
-                        <label style="font-size:0.8rem; color:#666; display:block; margin-bottom:4px;">📅 日付</label>
-                        <input type="date" id="planDate"
-                            style="width:100%; height:45px; padding:10px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box; -webkit-appearance: none; background:white;">
+                        <!-- User requested standard placeholders inside box, removed labels -->
+                        <input type="text" id="planDate" placeholder="日付" onfocus="(this.type='date')"
+                            onblur="(this.type='text')"
+                            style="width:100%; height:45px; padding:10px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box; background:white;">
                     </div>
                     <div style="flex:2;">
-                        <label style="font-size:0.8rem; color:#666; display:block; margin-bottom:4px;">🎤 アーティスト</label>
                         <input type="text" id="planInputArtist" placeholder="アーティスト名"
                             style="width:100%; height:45px; padding:10px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;">
                     </div>
                 </div>
                 <div>
-                    <label style="font-size:0.8rem; color:#666; display:block; margin-bottom:4px;">🏟️ 会場名</label>
-                    <input type="text" id="planVenue" placeholder="会場名 (例: Zepp Haneda)"
+                    <!-- Removed examples as requested -->
+                    <input type="text" id="planVenue" placeholder="会場名"
                         style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;">
                 </div>
-                <textarea id="planMemo" placeholder="メモ (備考/整理番号など)"
+                <textarea id="planMemo" placeholder="メモ"
                     style="padding:10px; border:1px solid #ddd; border-radius:8px; height:60px;"></textarea>
             </div>
 
